@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import AuthUser from '../modules/auth/AuthUser.vue'
+import publicRouter from './public_router'
+import userRouter from './user_router'
+import adminRouter from './admin_router'
 
 Vue.use(VueRouter)
 
@@ -17,7 +20,14 @@ const routes = [
             {
                 path: '/login',
                 name: 'login',
-                component: AuthUser
+                component: AuthUser,
+                meta: {}
+            },
+            {
+                path: '/recovery_account',
+                name: 'recovery_account',
+                component: AuthUser,
+                meta: {}
             }
         ]
     }

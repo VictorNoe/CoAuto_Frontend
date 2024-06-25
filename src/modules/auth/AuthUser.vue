@@ -15,13 +15,13 @@
                   cols=12
                 >
                   <h1>Iniciar Sesión</h1>
-                  <p class="mb-8">¿Aun no tienes una cuenta? <a>Crear Cuentas</a></p>
+                  <p class="mb-8">¿Aun no tienes una cuenta? <a>Crear Cuenta</a></p>
                   <v-text-field
                     v-model="email"
                     :loading="loading"
                     :disabled="loading"
                     :rules="rulesEmail"
-                    label="Corre Electronico"
+                    label="Correo Electronico"
                     placeholder="johndoe@gmail.com"
                     hide-datails
                     required
@@ -40,6 +40,7 @@
                   >
                   </v-text-field>
                   <v-checkbox
+                    :disabled="loading"
                     v-model="checkbox"
                     label="Recordar cuenta"
                     required
@@ -74,7 +75,7 @@
         password: '',
         checkbox: false,
         rulesEmail: [
-          value => !!value || 'Required.',
+          value => !!value || 'Requiere llenar campo.',
           value => (value || '').length <= 20 || '20 caracteres maximo.',
           value => (value || '').length >= 8 || '8 caracteres minimo.',
           value => {
@@ -83,8 +84,8 @@
           },
         ],
         rulesPassword: [
-          value => !!value || 'Required.',
-          value => (value || '').length <= 20 || '20 caracteres maximo.',
+        value => !!value || 'Requiere llenar campo.',
+        value => (value || '').length <= 20 || '20 caracteres maximo.',
           value => (value || '').length >= 8 || '8 caracteres minimo.',
           value => {
             const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?])\S+$/
