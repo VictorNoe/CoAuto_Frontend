@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import AuthUser from '../modules/auth/AuthUser.vue'
-import publicRouter from './public_router'
-import userRouter from './user_router'
-import adminRouter from './admin_router'
-
+import AccountProfileVue from '@/modules/profile/AccountProfile.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -28,7 +25,13 @@ const routes = [
                 name: 'recovery_account',
                 component: AuthUser,
                 meta: {}
-            }
+            },
+            {
+                path: '/profile',
+                name: 'profile',
+                component: AccountProfileVue,
+                meta: {}
+            },
         ]
     }
 ]
