@@ -18,19 +18,25 @@ const routes = [
                 path: '/login',
                 name: 'login',
                 component: AuthUser,
-                meta: {}
+                meta: {
+                    title:"Inicio de sesion"
+                }
             },
             {
                 path: '/recovery_account',
                 name: 'recovery_account',
                 component: AuthUser,
-                meta: {}
+                meta: {
+                    title:"Recuperar cuenta"
+                }
             },
             {
                 path: '/profile',
                 name: 'profile',
                 component: AccountProfileVue,
-                meta: {}
+                meta: {
+                    title:"Perfil"
+                }
             },
         ]
     }
