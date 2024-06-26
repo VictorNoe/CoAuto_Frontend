@@ -17,19 +17,25 @@ const routes = [
                 path: '/login',
                 name: 'login',
                 component: AuthUser,
-                meta: {}
+                meta: {
+                    title:"Inicio de sesion"
+                }
             },
             {
                 path: '/recovery_account',
                 name: 'recovery_account',
                 component: AuthUser,
-                meta: {}
+                meta: {
+                    title:"Recuperar cuenta"
+                }
             },
             {
                 path: '/profile',
                 name: 'profile',
                 component: AccountProfileVue,
-                meta: {}
+                meta: {
+                    title:"Perfil"
+                }
             },
         ]
     }
@@ -38,5 +44,11 @@ const routes = [
 const router = new VueRouter({
     mode: 'history', routes
 })
-
+router.beforeEach((to, from, next)=> {
+    const isTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title)
+    if (isTitle) {
+      document.title = isTitle.meta.title
+    }
+    next()
+})
 export default router
