@@ -1,6 +1,6 @@
 <template>
-    <v-container>
-      <v-row class="box">
+    <v-container fluid>
+      <v-row>
         <v-col cols="6">
           <v-img
             class="bg-white"
@@ -16,29 +16,31 @@
                 >
                   <h1>Iniciar Sesión</h1>
                   <p class="mb-8">¿Aun no tienes una cuenta? <a>Crear Cuenta</a></p>
+                  <div class="text-subtitle-1 text-medium-emphasis">Correo electronico</div>
                   <v-text-field
                     v-model="email"
                     :loading="loading"
                     :disabled="loading"
                     :rules="rulesEmail"
-                    label="Correo Electronico"
                     placeholder="johndoe@gmail.com"
-                    hide-datails
+                    outlined
                     required
-                  >
-                  </v-text-field>
+                  ></v-text-field>
+
+                  <div class="text-subtitle-1 text-medium-emphasis">Contraseña</div>
                   <v-text-field
                     v-model="password"
                     :loading="loading"
                     :disabled="loading"
                     :rules="rulesPassword"
-                    label="Contraseña"
-                    type="password"
+                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show1 ? 'text' : 'password'"
                     placeholder="Ingresa almenos 8 caracteres o más"
-                    hide-datails
+                    outlined
                     required
-                  >
-                  </v-text-field>
+                    @click:append="show1 = !show1"
+                  ></v-text-field>
+
                   <v-checkbox
                     :disabled="loading"
                     v-model="checkbox"
@@ -70,6 +72,7 @@
   export default {
     data() {
       return {
+        show1: false,
         loading: false,
         email: '',
         password: '',

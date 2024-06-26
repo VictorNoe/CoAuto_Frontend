@@ -1,18 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import AuthUser from '../modules/auth/AuthUser.vue'
+import LayoutUser from '../layouts/LayoutUser.vue'
 import AccountProfileVue from '@/modules/profile/AccountProfile.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: '/',
         redirect: '/login',
-        component : {
-            render(h) {
-                return h("router-view")
-            },
-        },
+        name: '',
+        component : LayoutUser,
         children: [
             {
                 path: '/login',
