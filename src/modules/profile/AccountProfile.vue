@@ -3,14 +3,14 @@
       <v-row justify="center">
         <v-col cols="12" md="8">
           <v-card class="pa-6">
-            <v-row align="center">
-              <v-col cols="12" md="2" class="text-md-left text-center">
+            <v-row  align="center">
+              <v-col cols="12" md="2" class="text-md-center text-center">
                 <v-avatar size="100">
                   <img src="https://lh3.googleusercontent.com/a-/ALV-UjUFbcq8oIR6RnhsEeDLwTL99ExZ_IxYL9aclEkr-LQ8c2sTru15=s32-c" alt="Profile Picture">
                 </v-avatar>
                 <v-btn text small @click="updatePhoto">Actualizar foto</v-btn>
               </v-col>
-              <v-col cols="12" md="10" class="text-center">
+              <v-col cols="12" md="10" class="text-start">
                 <h3>Karel Salgado</h3>
                 <p>Hola, bienvenid@ a tu perfil</p>
               </v-col>
@@ -39,20 +39,25 @@
             </v-row>
             <v-divider class="my-4"></v-divider>
             <v-row>
-              <v-col cols="12">
                 <h4>Correo electronico</h4>
                 <p>Este es tu correo electronico y contraseña que registraste, si deseas cambiar la contraseña da click "editar"</p>
-                <v-text-field
+                <v-col cols="12" md="5">
+                  <v-text-field
                   label="Correo electronico"
                   v-model="email"
                   readonly
                 ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="5">
+                
                 <v-text-field
                   label="Contraseña"
                   v-model="password"
                   type="password"
                   readonly
                 ></v-text-field>
+              </v-col>
+              <v-col cols="12">
                 <v-btn text small @click="editEmail">Editar</v-btn>
               </v-col>
             </v-row>
