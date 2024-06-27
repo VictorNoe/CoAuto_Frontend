@@ -3,6 +3,7 @@
     color="white"
     padless
   >
+    <v-divider></v-divider>
     <v-row
       justify="center"
       no-gutters

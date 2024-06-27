@@ -19,12 +19,22 @@
             alt="John"
           >
         </v-avatar>
+        <v-btn 
+          icon
+          @click="show = !show"
+        >
+          <v-icon>{{show ? 'mdi-chevron-down' : 'mdi-chevron-up'}}</v-icon>
+        </v-btn>
       </v-app-bar>
   </div>
 </template>
 <script>
 export default {
-
+  data() {
+    return {
+      show: true
+    }
+  },
 }
 </script>
 <style lang="">

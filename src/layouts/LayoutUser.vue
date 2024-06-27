@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col>
-                <NavbarUser/>
+                <NavbarUser v-if="showNavbar"/>
             </v-col>
         </v-row>
         <v-row>
@@ -12,7 +12,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <FooterUser/>
+                <FooterUser v-if="showFooter"/>
             </v-col>
         </v-row>
     </v-container>
@@ -25,6 +25,12 @@ export default {
     components: {
         FooterUser,
         NavbarUser
-    }
+    },
+    data() {
+        return {
+            showNavbar: true,
+            showFooter: true
+        };
+    },
 }
 </script>

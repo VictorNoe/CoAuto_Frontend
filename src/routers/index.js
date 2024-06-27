@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import AuthUser from '../modules/auth/AuthUser.vue'
 import LayoutUser from '../layouts/LayoutUser.vue'
+import LandingPage from '../modules/landing/LandingUser.vue'
 import AccountProfileVue from '@/modules/profile/AccountProfile.vue'
 
 Vue.use(VueRouter)
@@ -27,6 +28,14 @@ const routes = [
                 component: AuthUser,
                 meta: {
                     title:"Recuperar cuenta"
+                }
+            },
+            {
+                path: '/home',
+                name: 'home',
+                component: LandingPage,
+                meta: {
+                    title:"Inicio"
                 }
             },
             {
