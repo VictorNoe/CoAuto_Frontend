@@ -11,7 +11,8 @@
             max-width="80"
           ></v-img>
         </v-toolbar-title>
-        <v-btn text color="white" :to="{ name: 'home' }">Inicio</v-btn>
+        <router-link class="color-link ml-14" :to="{ name: 'home' }">Inicio</router-link>
+        <router-link class="color-link ml-7" :to="{ name: 'explore' }">Explorar</router-link>
         <v-spacer></v-spacer>
         <v-avatar>
           <img
@@ -22,6 +23,7 @@
         <v-menu 
           offset-y
           min-width="200px"
+          :close-on-click="false"
         >
         <template v-slot:activator="{ on, attrs }">
           <v-btn 
@@ -88,6 +90,9 @@ export default {
   },
 }
 </script>
-<style lang="">
-
+<style scoped>
+color-link {
+  color: #828282;
+  text-decoration: none;
+}
 </style>
