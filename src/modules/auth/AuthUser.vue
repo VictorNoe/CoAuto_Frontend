@@ -1,5 +1,5 @@
 <template>
-    <v-container padding="8" class="fill-height d-flex align-center justify-center">
+    <v-container class="fill-height d-flex align-center justify-center">
       <v-row>
         <v-col cols="12" md="6" class="d-flex justify-center d-sm-none">
           <v-img
@@ -23,7 +23,7 @@
                   cols=12
                 >
                   <h1>Iniciar Sesión</h1>
-                  <p class="mb-8">¿Aun no tienes una cuenta? <a>Crear Cuenta</a></p>
+                  <p class="mb-8">¿Aun no tienes una cuenta? <router-link :to="{ name: 'register' }">Crear Cuenta</router-link></p>
                   <div class="text-subtitle-1 text-medium-emphasis">Correo electronico</div>
                   <v-text-field
                     v-model="email"
@@ -116,6 +116,6 @@
 
 <style scoped>
 .fill-height {
-  height: 100vh;
+  height: 80vh;
 }
 </style>

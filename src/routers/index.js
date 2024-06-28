@@ -3,7 +3,9 @@ import VueRouter from 'vue-router'
 import AuthUser from '../modules/auth/AuthUser.vue'
 import LayoutUser from '../layouts/LayoutUser.vue'
 import LandingPage from '../modules/landing/LandingUser.vue'
+import RegisterUser from '../modules/register/RegisterUser.vue'
 import AccountProfileVue from '@/modules/profile/AccountProfile.vue'
+import NotFount from '../modules/404/NotFount.vue'
 import VehiclesSearch from '@/modules/vehiches_search/VehiclesSearch.vue';
 import DetailsCar from '@/modules/details-cars/DetailsCar.vue';
 
@@ -22,6 +24,14 @@ const routes = [
                 component: AuthUser,
                 meta: {
                     title:"Inicio de sesion"
+                }
+            },
+            {
+                path: '/register',
+                name: 'register',
+                component: RegisterUser,
+                meta: {
+                    title:"Registra cuenta"
                 }
             },
             {
@@ -65,6 +75,14 @@ const routes = [
                 }
             }
         ]
+    },
+    {
+        path: '/*',
+        name: '404',
+        component: NotFount,
+        meta: {
+            title: 'not fount page'
+        }   
     }
 ]
 
