@@ -5,6 +5,7 @@ import LayoutUser from '../layouts/LayoutUser.vue'
 import LandingPage from '../modules/landing/LandingUser.vue'
 import AccountProfileVue from '@/modules/profile/AccountProfile.vue'
 import VehiclesSearch from '@/modules/vehiches_search/VehiclesSearch.vue';
+import DetailsCar from '@/modules/details-cars/DetailsCar.vue';
 
 Vue.use(VueRouter)
 
@@ -53,6 +54,14 @@ const routes = [
                 component: VehiclesSearch,
                 meta: {
                     title: 'Vehículos'
+                }
+            },
+            {
+                path: '/details_car/:id',
+                name: 'details_car',
+                component: DetailsCar,
+                meta: {
+                    title: 'Detalles'
                 }
             }
         ]

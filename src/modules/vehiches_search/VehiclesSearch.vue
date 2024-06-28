@@ -11,7 +11,7 @@
             <v-col md="9" sm="12">
                 <v-row>
                     <v-col v-for="vehicle in paginatedItems" :key="vehicle.id" class="my-2" lg="4" md="6" sm="12">
-                        <v-card>
+                        <v-card class="vehicle-card" @click="redirectCar(vehicle.id)" >
                             <v-img :src="vehicle.image" height="150px" contain></v-img>
                             <v-card-title>{{ vehicle.model }}</v-card-title>
                             <v-card-subtitle>{{ vehicle.brand }}</v-card-subtitle>
@@ -26,6 +26,7 @@
                 v-model="page"
                 :length="pageCount"
                 :total-visible="5"
+                class="mt-2"
                 ></v-pagination>
             </v-col>
         </v-row>        
@@ -54,6 +55,9 @@ export default {
             for(let i = 0; i<25; i++) {
                 this.vehicles.push(this.exampleVehicle);
             }
+        },
+        redirectCar(vehicleId) {
+            this.$router.push({name: 'details_car', params: {id: vehicleId}});
         }
     },
     mounted() {
@@ -78,4 +82,8 @@ export default {
         padding: 1em 0 1em 0;
         font-weight: bold;
     }
+    .vehicle-card {
+        cursor: pointer;
+    }
+    
 </style>
