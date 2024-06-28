@@ -4,6 +4,7 @@ import AuthUser from '../modules/auth/AuthUser.vue'
 import LayoutUser from '../layouts/LayoutUser.vue'
 import LandingPage from '../modules/landing/LandingUser.vue'
 import AccountProfileVue from '@/modules/profile/AccountProfile.vue'
+import VehiclesSearch from '@/modules/vehiches_search/VehiclesSearch.vue';
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,14 @@ const routes = [
                     title:"Perfil"
                 }
             },
+            {
+                path: '/vehicles_search',
+                name: 'vehicles_search',
+                component: VehiclesSearch,
+                meta: {
+                    title: 'Vehículos'
+                }
+            }
         ]
     }
 ]
