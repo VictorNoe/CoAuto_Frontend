@@ -4,17 +4,17 @@
         <v-row>
             <v-col v-for="comment in comments" :key="comment.id" cols="12" sm="4">
                 <v-card>
-                <v-card-title>
-                    <v-avatar size="40">
-                    <img :src="comment.avatar" alt="Avatar">
-                    </v-avatar>
-                    <span class="ml-3">{{ comment.name }}</span>
-                </v-card-title>
-                <v-card-subtitle>{{ comment.model }}</v-card-subtitle>
-                <v-card-text>
-                    <v-rating color="yellow" :value="comment.rating" readonly></v-rating>
-                    <p>{{ comment.text }}</p>
-                </v-card-text>
+                    <v-card-title>
+                        <v-avatar size="50">
+                        <img :src="comment.avatar" alt="Avatar">
+                        </v-avatar>
+                        <span class="ml-4">{{ comment.name }}</span>
+                    </v-card-title>
+                    <v-card-subtitle>{{ comment.model }}</v-card-subtitle>
+                    <v-card-text>
+                        <v-rating color="yellow darken-3" background-color="grey darken-1" empty-icon="$ratingFull" :value="comment.rating" readonly></v-rating>
+                        <p>{{ comment.text }}</p>
+                    </v-card-text>
                 </v-card>
             </v-col>
         </v-row>

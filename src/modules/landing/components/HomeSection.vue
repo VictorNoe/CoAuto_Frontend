@@ -1,14 +1,14 @@
-<template lang="">
-    <v-container class="my-12">
-        <v-row>
-            <v-col>
-                <h1>Empezar el día nunca se ha sentido mejor.</h1>
-                <p>¡Descubre todos los vehículos de tu interés, con la información más detallada en el mercado!</p>
-                <div class="text-center" >
+<template>
+    <v-container class="my-12 d-flex align-center justify-center">
+        <v-row class="d-flex justify-center">
+            <v-col cols="12" md="6" >
+                <h1 class="my-8">Empezar el día nunca se ha sentido mejor.</h1>
+                <p class="my-8">¡Descubre todos los vehículos de tu interés, con la información más detallada en el mercado!</p>
+                <div class="my-8 text-center" >
                     <v-btn color="primary" dark>Descubre ahora</v-btn>
                 </div>
             </v-col>
-            <v-col>
+            <v-col cols="12" md="6" >
                 <v-img 
                     src="../../../assets/svg/undraw_file_searching_re_3evy.svg" 
                     alt="Home Image"
