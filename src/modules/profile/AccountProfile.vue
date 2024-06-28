@@ -4,13 +4,13 @@
         <v-col cols="12" md="8">
           <v-card class="pa-6">
             <v-row  align="center">
-              <v-col cols="12" md="2" class="text-md-center text-center">
+              <v-col cols="12" md="3" sm="12" lg="3" class="text-md-center text-center">
                 <v-avatar size="100">
                   <img src="https://lh3.googleusercontent.com/a-/ALV-UjUFbcq8oIR6RnhsEeDLwTL99ExZ_IxYL9aclEkr-LQ8c2sTru15=s32-c" alt="Profile Picture">
                 </v-avatar>
                 <v-btn text small @click="updatePhoto">Actualizar foto</v-btn>
               </v-col>
-              <v-col cols="12" md="10" class="text-start">
+              <v-col cols="12" md="8" class="text-start">
                 <h3>Karel Salgado</h3>
                 <p>Hola, bienvenid@ a tu perfil</p>
               </v-col>
@@ -23,12 +23,16 @@
               </v-col>
               <v-col cols="12" md="5">
                 <v-text-field
+                outlined
+                required
                   label="Nombre(s)"
                   v-model="firstName"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="5">
                 <v-text-field
+                required
+                outlined
                   label="Apellido(s)"
                   v-model="lastName"
                 ></v-text-field>
@@ -46,6 +50,8 @@
                   label="Correo electronico"
                   v-model="email"
                   readonly
+                  outlined
+                  required
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="5">
@@ -55,6 +61,8 @@
                   v-model="password"
                   type="password"
                   readonly
+                  outlined
+                  required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
