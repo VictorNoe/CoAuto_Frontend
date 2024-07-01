@@ -12,7 +12,7 @@
           ></v-img>
         </v-toolbar-title>
         <router-link class="color-link ml-14" :to="{ name: 'home' }">Inicio</router-link>
-        <router-link class="color-link ml-7" :to="{ name: 'explore' }">Explorar</router-link>
+        <router-link class="color-link ml-7" :to="{ name: 'vehicles_search' }">Explorar</router-link>
         <v-spacer></v-spacer>
         <v-avatar>
           <img
@@ -64,7 +64,7 @@
                 depressed
                 rounded
                 text
-                :to="{ name: 'login' }"
+                @click="logout"
               >
                 Cerrar Sesión
               </v-btn>
@@ -86,6 +86,12 @@ export default {
         email: 'john.doe@doe.com',
         image: 'https://cdn.vuetifyjs.com/images/john.jpg',
       },
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+      this.$router.push({name: 'login'})
     }
   },
 }

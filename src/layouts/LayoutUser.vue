@@ -1,36 +1,56 @@
-<template lang="">
+<template>
     <v-container>
-        <v-row>
-            <v-col>
-                <NavbarUser v-if="showNavbar"/>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <router-view/>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <FooterUser v-if="showFooter"/>
-            </v-col>
-        </v-row>
+      <v-row>
+        <v-col>
+          <NavbarUser v-if="showNavbar"/>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <router-view/>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <FooterUser v-if="showFooter"/>
+        </v-col>
+      </v-row>
     </v-container>
-</template>
-<script>
-import FooterUser from '../components/FooterUser.vue';
-import NavbarUser from '../components/NavbarUser.vue'
-
-export default {
+  </template>
+  
+  <script>
+  import { mapGetters } from 'vuex';
+  import FooterUser from '../components/FooterUser.vue';
+  import NavbarUser from '../components/NavbarUser.vue';
+  
+  export default {
     components: {
-        FooterUser,
-        NavbarUser
+      FooterUser,
+      NavbarUser
     },
-    data() {
-        return {
-            showNavbar: true,
-            showFooter: true
-        };
+    computed: {
+      ...mapGetters(['isAuthenticated']),
+      showNavbar() {
+        return this.isAuthenticated && !this.$route.meta.hideNavbarFooter;
+      },
+      showFooter() {
+        return this.isAuthenticated && !this.$route.meta.hideNavbarFooter;
+      }
     },
-}
-</script>
+    watch: {
+      '$route'(to) {
+        this.updateNavbarFooterVisibility(to);
+      }
+    },
+    created() {
+      this.updateNavbarFooterVisibility(this.$route);
+    },
+    methods: {
+      updateNavbarFooterVisibility(route) {
+        this.showNavbar = this.isAuthenticated && !route.meta.hideNavbarFooter;
+        this.showFooter = this.isAuthenticated && !route.meta.hideNavbarFooter;
+      }
+    }
+  }
+  </script>
+  
