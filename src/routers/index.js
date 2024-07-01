@@ -78,7 +78,8 @@ const routes = [
                 name: 'vehicles',
                 component: VehiclesList,
                 meta: {
-                    title:"Autos"
+                    requiresAuth: true,
+                    roles: ['AdminUserGroup']
                 }
             },
             {
@@ -86,7 +87,8 @@ const routes = [
                 name: 'users',
                 component: UserList,
                 meta: {
-                    title:"Usuarios"
+                    requiresAuth: true,
+                    roles: ['AdminUserGroup']
                 }
             },
         ]
@@ -118,7 +120,7 @@ router.beforeEach((to, from, next) => {
             next('/home');
         }
         if(userRole == ['AdminUserGroup']) {
-            next('/dasboard');
+            next('/list_vehicles');
         }
     } else {
         next();
