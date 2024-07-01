@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {jwtDecode} from 'jwt-decode';  // Asegúrate de que esta importación es correcta
+import {jwtDecode} from 'jwt-decode';
 
 Vue.use(Vuex);
 

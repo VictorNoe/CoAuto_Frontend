@@ -52,7 +52,7 @@ const routes = [
                 component: AccountProfileVue,
                 meta: {
                     requiresAuth: true,
-                    roles: ['ClientUserGroup']
+                    roles: ['ClientUserGroup','AdminUserGroup']
                 }
             },
             {
