@@ -9,6 +9,8 @@ import NotFount from '../modules/404/NotFount.vue'
 import VehiclesSearch from '@/modules/vehiches_search/VehiclesSearch.vue';
 import DetailsCar from '@/modules/details-cars/DetailsCar.vue';
 import store from '../utils/store';
+import VehiclesList from '@/modules/vehicles/VehiclesList.vue';
+import UserList from '@/modules/users/UserList.vue';
 
 Vue.use(VueRouter)
 
@@ -70,7 +72,23 @@ const routes = [
                     requiresAuth: true,
                     roles: ['ClientUserGroup']
                 }
-            }
+            },
+            {
+                path: '/list_vehicles',
+                name: 'vehicles',
+                component: VehiclesList,
+                meta: {
+                    title:"Autos"
+                }
+            },
+            {
+                path: '/list_users',
+                name: 'users',
+                component: UserList,
+                meta: {
+                    title:"Usuarios"
+                }
+            },
         ]
     },
     {
@@ -78,7 +96,7 @@ const routes = [
         name: '404',
         component: NotFount,
         meta: {
-            title: 'not fount page'
+            title: 'Not Fount Page'
         }
     }
 ]
