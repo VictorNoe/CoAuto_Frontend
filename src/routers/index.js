@@ -8,6 +8,7 @@ import AccountProfileVue from '@/modules/profile/AccountProfile.vue'
 import NotFount from '../modules/404/NotFount.vue'
 import VehiclesSearch from '@/modules/vehiches_search/VehiclesSearch.vue';
 import DetailsCar from '@/modules/details-cars/DetailsCar.vue';
+import store from '../utils/store';
 
 Vue.use(VueRouter)
 
@@ -16,14 +17,14 @@ const routes = [
         path: '/',
         redirect: '/login',
         name: '',
-        component : LayoutUser,
+        component: LayoutUser,
         children: [
             {
                 path: '/login',
                 name: 'login',
                 component: AuthUser,
                 meta: {
-                    title:"Inicio de sesion"
+                    requiresAuth: false
                 }
             },
             {
@@ -31,15 +32,7 @@ const routes = [
                 name: 'register',
                 component: RegisterUser,
                 meta: {
-                    title:"Registra cuenta"
-                }
-            },
-            {
-                path: '/recovery_account',
-                name: 'recovery_account',
-                component: AuthUser,
-                meta: {
-                    title:"Recuperar cuenta"
+                    requiresAuth: false,
                 }
             },
             {
@@ -47,7 +40,8 @@ const routes = [
                 name: 'home',
                 component: LandingPage,
                 meta: {
-                    title:"Inicio"
+                    requiresAuth: true,
+                    roles: ['ClientUserGroup']
                 }
             },
             {
@@ -55,7 +49,8 @@ const routes = [
                 name: 'profile',
                 component: AccountProfileVue,
                 meta: {
-                    title:"Perfil"
+                    requiresAuth: true,
+                    roles: ['ClientUserGroup']
                 }
             },
             {
@@ -63,7 +58,8 @@ const routes = [
                 name: 'vehicles_search',
                 component: VehiclesSearch,
                 meta: {
-                    title: 'Vehículos'
+                    requiresAuth: true,
+                    roles: ['ClientUserGroup']
                 }
             },
             {
@@ -71,7 +67,8 @@ const routes = [
                 name: 'details_car',
                 component: DetailsCar,
                 meta: {
-                    title: 'Detalles'
+                    requiresAuth: true,
+                    roles: ['ClientUserGroup']
                 }
             }
         ]
@@ -82,18 +79,37 @@ const routes = [
         component: NotFount,
         meta: {
             title: 'not fount page'
-        }   
+        }
     }
 ]
 
 const router = new VueRouter({
     mode: 'history', routes
 })
-router.beforeEach((to, from, next)=> {
-    const isTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title)
-    if (isTitle) {
-      document.title = isTitle.meta.title
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = store.getters.isAuthenticated;
+    const userRole = store.getters.userRole;
+    console.log(userRole);
+
+    if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+        next('/login');
+    } else if (to.meta.roles && !to.meta.roles.includes(userRole)) {
+        next('/404');
+    } else if (isAuthenticated && (to.path === '/login' || to.path === '/register')) {
+        if(userRole == ['ClientUserGroup']) {
+            next('/home');
+        }
+        if(userRole == ['AdminUserGroup']) {
+            next('/dasboard');
+        }
+    } else {
+        next();
     }
-    next()
+    const isTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
+    if (isTitle) {
+        document.title = isTitle.meta.title;
+    }
 })
+
+
 export default router
