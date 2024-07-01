@@ -1,5 +1,5 @@
 <template lang="">
-    <v-container>
+    <v-container>        
         <div>
             <v-breadcrumbs
             large
@@ -10,7 +10,13 @@
         </div>
         <v-row>
             <v-col sm="12" md="6">
-                <v-img :src="'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'" height="280px" contain></v-img>                
+                <v-carousel hide-delimiters>
+                    <v-carousel-item
+                    v-for="(image,i) in images"
+                    :key="i"
+                    :src="image.src"
+                    ></v-carousel-item>
+                </v-carousel>
             </v-col>
             <v-col sm="12" md="6" >
                 <v-card elevation="0" class="info-card">
@@ -50,13 +56,27 @@ export default {
                     disabled: true,
                 }          
             ],
+            images: [
+                {
+                    src: 'https://wallpapercave.com/wp/XtJjBZT.jpg'
+                },
+                {
+                    src: 'https://wallpapercave.com/wp/toBW8HX.jpg'
+                },
+                {
+                    src: 'https://wallpapercave.com/wp/jLYUjUj.jpg'
+                },
+                {
+                    src: 'https://wallpapercave.com/wp/WddMJvc.jpg'
+                },
+            ],            
             exampleVehicle:
             {
                 id: 1,
-                model: 'New SM5',
-                brand: 'Toyota',
+                model: 'A5',
+                brand: 'Audi',
                 price: '$79,999.99',
-                description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
+                description: 'Osea es audi compralo pobre',
                 image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
             },
             rate: 4.8
