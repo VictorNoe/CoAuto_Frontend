@@ -34,7 +34,7 @@
             max-width="135.64"
         ></v-img>
       </v-col>
-      <h2 class="py-4">Redes sosiales</h2>
+      <h2 class="grey--text py-4">Redes sociales</h2>
       <v-col
         class="lighten-2 py-4 text-center white--text"
         cols="12"
@@ -51,7 +51,7 @@
           </v-btn>
       </v-col>
       <v-col
-        class="py-4 text-center"
+        class="py-4 text-center grey--text"
         cols="12"
       >
         <strong>Copyright © {{ new Date().getFullYear() }} | CoAuto. Reservados todos los derechos.</strong>

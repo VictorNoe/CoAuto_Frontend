@@ -24,7 +24,7 @@ export default {
       if (userRole == ['ClientUserGroup']) {
         window.location.href = "/home";
       } else if (userRole == ['AdminUserGroup']) {
-        window.location.href = "/trabajador";
+        window.location.href = "/list_vehicles";
       } else {
         window.location.href = "/";
       }

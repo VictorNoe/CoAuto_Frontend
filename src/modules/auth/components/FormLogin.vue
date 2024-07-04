@@ -49,57 +49,84 @@
                   >
                     INICIAR SESIÓN
                   </v-btn>
-                  <p class="text-center mt-4">¿No recuerdas tu contraseña? <a>Recuperar Cuenta</a></p>
+                  <p class="text-center mt-4">¿No recuerdas tu contraseña? <a @click="recoveryAccount()">Recuperar Cuenta</a></p>
                 </v-col>
+                <RecoveryAccount
+                  :dialog.sync="dialog"
+                  @close-dialog="handleDialogClose"
+                />
               </v-row>
             </v-container>
           </v-form>
     </div>
 </template>
 <script>
-import {login} from "../AuthServices"
+import { login } from "../AuthServices"
+import RecoveryAccount from "./RecoveryAccount.vue";
 export default {
-    data() {
-        return {
-            show1: false,
-            loading: false,
-            email: '',
-            password: '',
-            checkbox: false,
-            rulesEmail: [
-                value => !!value || 'Requiere llenar campo.',
-                value => (value || '').length <= 50 || '20 caracteres maximo.',
-                value => (value || '').length >= 8 || '8 caracteres minimo.',
-                value => {
-                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                    return pattern.test(value) || 'Correo invalido.'
-                },
-            ],
-            rulesPassword: [
-                value => !!value || 'Requiere llenar campo.',
-                value => (value || '').length <= 20 || '20 caracteres maximo.',
-                value => (value || '').length >= 8 || '8 caracteres minimo.',
-                value => {
-                    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#!%?])\S+$/
-                    return pattern.test(value) || 'Contraseña invalida.'
-                },
-            ],
-        }
-    },
-    methods: {
-        async handleLogin() {
-            try {
-                this.loading = true
-                const data = await login(this.email, this.password);
-                localStorage.setItem('token', data.response.IdToken);
-                this.$store.dispatch('login', data.response.IdToken);
-                this.$router.push({ name: 'home' });
-            } catch (error) {
-                console.error(error);
-            } finally {
-                this.loading = false
-            }
-        }
+  data() {
+    return {
+      show1: false,
+      loading: false,
+      email: '',
+      password: '',
+      dialog: false,
+      checkbox: false,
+      rulesEmail: [
+        value => !!value || 'Requiere llenar campo.',
+        value => (value || '').length <= 50 || '20 caracteres maximo.',
+        value => (value || '').length >= 8 || '8 caracteres minimo.',
+        value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || 'Correo invalido.'
+        },
+      ],
+      rulesPassword: [
+        value => !!value || 'Requiere llenar campo.',
+        value => (value || '').length <= 20 || '20 caracteres maximo.',
+        value => (value || '').length >= 8 || '8 caracteres minimo.',
+        value => {
+          const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#!%?])\S+$/
+          return pattern.test(value) || 'Contraseña invalida.'
+        },
+      ],
     }
+  },
+  methods: {
+    async handleLogin() {
+      try {
+        this.loading = true
+        const data = await login(this.email, this.password);
+        console.log(data);
+        if (data.response.status === 402) {
+          this.recoveryAccount()
+        } else if (data.response.status === 408) {
+          this.recoveryAccount()
+        } else {
+          localStorage.setItem('token', data.response.IdToken);
+          this.$store.dispatch('login', data.response.IdToken);
+          if (data.role == 'ClientUserGroup') {
+            this.$router.push({ name: 'home' });
+          }
+          if (data.role == 'AdminUserGroup') {
+            this.$router.push({ name: 'vehicles' });
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.loading = false
+      }
+    },
+    recoveryAccount() {
+      this.dialog = true
+    },
+    handleDialogClose(value) {
+      this.dialog = value;
+    }
+  },
+  components: {
+    RecoveryAccount
+  }
 }
 </script>

@@ -9,6 +9,8 @@ import NotFount from '../modules/404/NotFount.vue'
 import VehiclesSearch from '@/modules/vehiches_search/VehiclesSearch.vue';
 import DetailsCar from '@/modules/details-cars/DetailsCar.vue';
 import store from '../utils/store';
+import VehiclesList from '@/modules/vehicles/VehiclesList.vue';
+import UserList from '@/modules/users/UserList.vue';
 
 Vue.use(VueRouter)
 
@@ -50,7 +52,7 @@ const routes = [
                 component: AccountProfileVue,
                 meta: {
                     requiresAuth: true,
-                    roles: ['ClientUserGroup']
+                    roles: ['ClientUserGroup','AdminUserGroup']
                 }
             },
             {
@@ -70,7 +72,25 @@ const routes = [
                     requiresAuth: true,
                     roles: ['ClientUserGroup']
                 }
-            }
+            },
+            {
+                path: '/list_vehicles',
+                name: 'vehicles',
+                component: VehiclesList,
+                meta: {
+                    requiresAuth: true,
+                    roles: ['AdminUserGroup']
+                }
+            },
+            {
+                path: '/list_users',
+                name: 'users',
+                component: UserList,
+                meta: {
+                    requiresAuth: true,
+                    roles: ['AdminUserGroup']
+                }
+            },
         ]
     },
     {
@@ -78,7 +98,7 @@ const routes = [
         name: '404',
         component: NotFount,
         meta: {
-            title: 'not fount page'
+            title: 'Not Fount Page'
         }
     }
 ]
@@ -100,7 +120,7 @@ router.beforeEach((to, from, next) => {
             next('/home');
         }
         if(userRole == ['AdminUserGroup']) {
-            next('/dasboard');
+            next('/list_vehicles');
         }
     } else {
         next();

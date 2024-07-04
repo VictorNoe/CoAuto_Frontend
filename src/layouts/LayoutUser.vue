@@ -34,7 +34,7 @@
         return this.isAuthenticated && !this.$route.meta.hideNavbarFooter;
       },
       showFooter() {
-        return this.isAuthenticated && !this.$route.meta.hideNavbarFooter;
+        return this.isAuthenticated && !this.$route.meta.hideNavbarFooter && this.$store.getters.userRole == "ClientUserGroup";
       }
     },
     watch: {
@@ -48,7 +48,7 @@
     methods: {
       updateNavbarFooterVisibility(route) {
         this.showNavbar = this.isAuthenticated && !route.meta.hideNavbarFooter;
-        this.showFooter = this.isAuthenticated && !route.meta.hideNavbarFooter;
+        this.showFooter = this.isAuthenticated && !route.meta.hideNavbarFooter && this.$store.getters.userRole == "ClientUserGroup";
       }
     }
   }
