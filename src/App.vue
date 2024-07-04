@@ -19,3 +19,8 @@ export default {
   }),
 };
 </script>
+<style>
+.no-boxShadow {
+  box-shadow: none !important;
+}
+</style>

@@ -1,5 +1,6 @@
 <template lang="">
-    <v-container >
+    <v-container>
+        <v-row></v-row>
         <v-row>
             <v-col  md="3" sm="12">
                 <v-card class="filter-card my-2">
