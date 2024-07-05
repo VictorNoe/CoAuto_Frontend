@@ -26,7 +26,8 @@ const routes = [
                 name: 'login',
                 component: AuthUser,
                 meta: {
-                    requiresAuth: false
+                    requiresAuth: false,
+                    title: 'Login'
                 }
             },
             {
@@ -35,6 +36,7 @@ const routes = [
                 component: RegisterUser,
                 meta: {
                     requiresAuth: false,
+                    title: 'Sign up'
                 }
             },
             {
@@ -43,7 +45,8 @@ const routes = [
                 component: LandingPage,
                 meta: {
                     requiresAuth: true,
-                    roles: ['ClientUserGroup']
+                    roles: ['ClientUserGroup'],
+                    title: 'Home'
                 }
             },
             {
@@ -52,7 +55,8 @@ const routes = [
                 component: AccountProfileVue,
                 meta: {
                     requiresAuth: true,
-                    roles: ['ClientUserGroup','AdminUserGroup']
+                    roles: ['ClientUserGroup','AdminUserGroup'],
+                    title: 'Perfil'
                 }
             },
             {
@@ -61,7 +65,8 @@ const routes = [
                 component: VehiclesSearch,
                 meta: {
                     requiresAuth: true,
-                    roles: ['ClientUserGroup']
+                    roles: ['ClientUserGroup'],
+                    title: 'Buscar Autos'
                 }
             },
             {
@@ -70,7 +75,8 @@ const routes = [
                 component: DetailsCar,
                 meta: {
                     requiresAuth: true,
-                    roles: ['ClientUserGroup']
+                    roles: ['ClientUserGroup'],
+                    title: 'Detalles del Auto'
                 }
             },
             {
@@ -79,7 +85,8 @@ const routes = [
                 component: VehiclesList,
                 meta: {
                     requiresAuth: true,
-                    roles: ['AdminUserGroup']
+                    roles: ['AdminUserGroup'],
+                    title: 'Autos'
                 }
             },
             {
@@ -88,7 +95,8 @@ const routes = [
                 component: UserList,
                 meta: {
                     requiresAuth: true,
-                    roles: ['AdminUserGroup']
+                    roles: ['AdminUserGroup'],
+                    title: 'Usuarios'
                 }
             },
         ]
