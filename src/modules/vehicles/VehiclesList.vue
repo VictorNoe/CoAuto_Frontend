@@ -11,13 +11,61 @@
         </v-row>
         <v-row>
             <v-col>
-                <v-data-table :headers="headers" :items="vehicles" :items-per-page="5" class="elevation-2">
-                    <!-- <template v-slot:item.status="{ item }">
-                        <v-chip :color="red" dark >
-                            {{ item.status }}
-                        </v-chip>
-                    </template> -->
-                </v-data-table>
+                <v-simple-table class="elevation-2">
+                    <template v-slot:default>
+                        <thead>
+                            <tr>
+                                <th class="text-left"><h3>ID</h3></th>
+                                <th class="text-left"><h3>Imagen</h3></th>
+                                <th class="text-left"><h3>Modelo</h3></th>
+                                <th class="text-left"><h3>Marca</h3></th>
+                                <th class="text-left"><h3>Año</h3></th>
+                                <th class="text-left"><h3>Puertas</h3></th>
+                                <th class="text-left"><h3>Precio</h3></th>
+                                <th class="text-left"><h3>Estado</h3></th>
+                                <th class="text-left"><h3>Acciones</h3></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in vehicles" :key="item.id">
+                                <td>{{ item.id_auto }}</td>
+                                <td><v-avatar size="36"><img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John"></v-avatar></td>
+                                <td>{{ item.model }}</td>
+                                <td>{{ item.brand }}</td>
+                                <td>{{ item.year }}</td>
+                                <td>{{ item.doors }}</td>
+                                <td>{{ item.price }}</td>
+                                <td><v-chip :color="getColor(item.status)" dark >{{ item.status }}</v-chip></td>
+                                <td>
+                                    <v-menu bottom left :close-on-click="true">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn icon color="grey" v-bind="attrs" v-on="on"><v-icon>mdi-dots-horizontal</v-icon></v-btn>
+                                        </template>
+                                        <v-card>
+                                            <v-list>
+                                                <v-list-item>
+                                                    <v-list-item-action>
+                                                        <v-btn text x-small><v-icon left dark>mdi-pencil-outline</v-icon>Editar</v-btn>
+                                                    </v-list-item-action>
+                                                </v-list-item>
+                                                <v-list-item>
+                                                    <v-list-item-action>
+                                                        <v-btn text x-small><v-icon left dark>mdi-toggle-switch-off-outline</v-icon>Desactivar</v-btn>
+                                                    </v-list-item-action>
+                                                </v-list-item>
+                                                <v-list-item>
+                                                    <v-list-item-action>
+                                                        <v-btn text x-small><v-icon left dark>mdi-message-outline</v-icon>Desactivar</v-btn>
+                                                    </v-list-item-action>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-card>
+                                    </v-menu>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
             </v-col>
         </v-row>
     </v-container>
@@ -27,16 +75,15 @@
     export default {
         data () {
             return {
-                headers: [
-                    { text: 'ID', align: 'center', sortable: false, value: 'id_auto' },
-                    { text: 'Imagen', align: 'center', value: 'img' },
-                    { text: 'Modelo', align: 'center', value: 'model' },
-                    { text: 'Marca', align: 'center', value: 'brand' },
-                    { text: 'Año', align: 'center', value: 'year' },
-                    { text: 'Precio', align: 'center', value: 'price' },
-                    { text: 'Puertas', align: 'center', value: 'doors' },
-                    { text: 'Estado', align: 'center', value: 'status' },
-                    { text: 'Acciones', align: 'center', value: 'actions' },
+                headers:[
+                    'ID',
+                    'Imagen',
+                    'Modelo',
+                    'Marca',
+                    'Año',
+                    'Puertas',
+                    'Precio',
+                    'Estado',
                 ],
                 vehicles: [
                     {
@@ -45,11 +92,33 @@
                         model: 'Toyota Corolla',
                         brand: 'Toyota',
                         year: 2019,
-                        price: 200000,
                         doors: 4,
+                        price: 200000,
                         status: 'Activo'
+                    },
+                    {
+                        id_auto: 2,
+                        img: 'Imagen',
+                        model: 'Toyota Corolla',
+                        brand: 'Toyota',
+                        year: 2019,
+                        doors: 4,
+                        price: 200000,
+                        status: 'Inactivo'
                     }
-                ]
+                ],
+            }
+        },
+        methods: {
+            getColor(status) {
+                switch(status) {
+                    case 'Activo':
+                        return 'green';
+                    case 'Inactivo':
+                        return 'red';
+                    default:
+                        return 'grey';
+                }
             }
         }
     };

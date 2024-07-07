@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://o9fjw01k72.execute-api.us-east-1.amazonaws.com/Prod/login';
+const API_URL = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/login';
 
 export const login = async (email, password) => {
     try {
