@@ -18,7 +18,7 @@
                     :disabled="otp.length < 6 || loading" @click="onClick">Verificar</v-btn>
 
                 <div class="text-caption">
-                    ¿No reciviste tu codigo? <a href="#" @click.prevent="otp = ''">Reenviar</a>
+                    ¿No resibiste tu codigo? <a href="#" @click.prevent="otp = ''">Reenviar</a>
                 </div>
                 <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="2000">
                     {{ text }}

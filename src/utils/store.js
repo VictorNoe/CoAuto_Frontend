@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const token = localStorage.getItem("token");
 let initialUser = {
     role: null,
-    user: null,
+    email: null,
     token: token || null,
 };
 
@@ -15,7 +15,7 @@ if (token) {
     try {
         const decodedToken = jwtDecode(token);
         initialUser = {
-            user: decodedToken.email,
+            email: decodedToken.email,
             role: decodedToken["cognito:groups"] ? decodedToken["cognito:groups"][0] : null,
             token: token
         };
@@ -31,7 +31,7 @@ export default new Vuex.Store({
     },
     mutations: {
         SET_USER(state, payload) {
-            state.user.user = payload.user;
+            state.user.email = payload.email;
             state.user.role = payload.role;
         },
         SET_TOKEN(state, token) {
@@ -50,7 +50,7 @@ export default new Vuex.Store({
             try {
                 const decodedToken = jwtDecode(token);
                 const user = {
-                    user: decodedToken.email,
+                    email: decodedToken.email,
                     role: decodedToken["cognito:groups"] ? decodedToken["cognito:groups"][0] : null,
                 };
                 commit('SET_USER', user);
@@ -65,6 +65,7 @@ export default new Vuex.Store({
     },
     getters: {
         isAuthenticated: state => !!state.user.token,
-        userRole: state => state.user.role
+        userRole: state => state.user.role,
+        emailUser: state => state.user.email,
     }
 });

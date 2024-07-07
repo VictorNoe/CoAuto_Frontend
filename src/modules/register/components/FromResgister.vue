@@ -73,7 +73,7 @@
 </template>
 <script>
 
-import ConfirmAccount from './ConfirmAccount.vue'
+import ConfirmAccount from '../../../components/ConfirmAccount.vue'
 export default {
   data() {
     return {

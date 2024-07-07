@@ -55,13 +55,20 @@
                   :dialog.sync="dialog"
                   @close-dialog="handleDialogClose"
                 />
+                <ConfirmAccount
+                  :dialog.sync="dialogConfirma"
+                  @close-dialog="confirmAccountClone"
+                />
               </v-row>
             </v-container>
           </v-form>
     </div>
 </template>
 <script>
-import { login } from "../AuthServices"
+import AuthServices from "../AuthServices"
+import Alert from "../../../utils/Alert"
+const { login } = AuthServices;
+import ConfirmAccount from "../../../components/ConfirmAccount.vue";
 import RecoveryAccount from "./RecoveryAccount.vue";
 export default {
   data() {
@@ -71,6 +78,7 @@ export default {
       email: '',
       password: '',
       dialog: false,
+      dialogConfirma: false,
       checkbox: false,
       rulesEmail: [
         value => !!value || 'Requiere llenar campo.',
@@ -97,11 +105,11 @@ export default {
       try {
         this.loading = true
         const data = await login(this.email, this.password);
-        console.log(data);
-        if (data.response.status === 402) {
-          this.recoveryAccount()
-        } else if (data.response.status === 408) {
-          this.recoveryAccount()
+        if (data.response.status === 412) {
+          this.ConfirmAccount()
+        } else if (data.response.status >= 400) {
+          const title = data.response.data.message;
+          Alert.Toast('error', title)
         } else {
           localStorage.setItem('token', data.response.IdToken);
           this.$store.dispatch('login', data.response.IdToken);
@@ -111,6 +119,7 @@ export default {
           if (data.role == 'AdminUserGroup') {
             this.$router.push({ name: 'vehicles' });
           }
+          Alert.Toast('success', 'Bienvenido')
         }
       } catch (error) {
         console.error(error);
@@ -123,10 +132,17 @@ export default {
     },
     handleDialogClose(value) {
       this.dialog = value;
+    },
+    ConfirmAccount() {
+      this.dialogConfirma = true
+    },
+    confirmAccountClone(value) {
+      this.dialogConfirma = value
     }
   },
   components: {
-    RecoveryAccount
+    RecoveryAccount,
+    ConfirmAccount
   }
 }
 </script>
