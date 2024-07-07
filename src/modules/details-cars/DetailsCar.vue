@@ -369,7 +369,9 @@ export default {
     },
     methods: {
         redirectCar(vehicleId) {
-            this.$router.push({name: 'details_car', params: {id: vehicleId}});
+            this.$router.push({name: 'details_car', params: {id: vehicleId}}).then(() => {
+                window.location.reload();
+            });
         }
     },
     computed: {
