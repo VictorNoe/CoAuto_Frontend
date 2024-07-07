@@ -168,7 +168,7 @@
         ></v-pagination>
         <v-card class="mx-4 my-6 pa-4">
             <v-row>
-                <v-col cols="9" class="d-flex">
+                <v-col cols="12" md="9" class="d-flex">
                         <v-avatar
                         >
                             <img :src="comments[0].user.img" alt="alt">
@@ -177,7 +177,7 @@
                             Karel Salgado
                         </v-card-title>
                 </v-col>
-                <v-col cols="3" class="align-content-center">
+                <v-col cols="12" md="3" class="align-content-center">
                     <v-rating
                     color="yellow darken-3"
                     background-color="grey darken-1"
@@ -188,7 +188,35 @@
                     ></v-rating>
                 </v-col>
             </v-row>
+            <v-row>
+                <v-col cols="12">
+                    <v-card class="box-comment pa-3">
+                        <textarea
+                        placeholder="Escribe tu comentario aquí"
+                        class="comment-textarea"
+                        >
+                        </textarea>
+                    </v-card>
+                </v-col>
+            </v-row>
+            <div class="w-100 d-flex my-4">
+                <v-btn color="primary" class="ms-auto">Comentar</v-btn>
+            </div>
         </v-card>
+        <h1 class="subheading">
+            Más vehículos
+        </h1>
+        <div class="w-100 list-vehicles">
+            <v-card class="card-vehicle" v-for="(vehicle, index) in vehicles" :key="index" @click="redirectCar(vehicle.id)" >
+                <v-img :src="vehicle.image" height="150px" contain></v-img>
+                <v-card-title>{{ vehicle.model }}</v-card-title>
+                <v-card-subtitle>{{ vehicle.brand }}</v-card-subtitle>
+                <v-card-text>
+                    <p class="font-weight-bold p-color">{{ vehicle.price }}</p>
+                    <p>{{ vehicle.description }}</p>
+                </v-card-text>
+            </v-card>
+        </div>
         <v-dialog
         v-model="dialog"
         content-class="no-boxShadow"
@@ -265,7 +293,6 @@ export default {
             },
             page: 1,
             itemsPerPage: 3,
-
             rate: 4.8,
             comments:[
                 {
@@ -304,6 +331,45 @@ export default {
             ,
             dialog: false,
             imgIndex: 0,
+            vehicles: [
+                {
+                    id: 1,
+                    model: 'New SM5',
+                    brand: 'Toyota',
+                    price: '$79,999.99',
+                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
+                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
+                },
+                {
+                    id: 2,
+                    model: 'New SM5',
+                    brand: 'Toyota',
+                    price: '$79,999.99',
+                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
+                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
+                },
+                {
+                    id: 3,
+                    model: 'New SM5',
+                    brand: 'Toyota',
+                    price: '$79,999.99',
+                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
+                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
+                },
+                {
+                    id: 4,
+                    model: 'New SM5',
+                    brand: 'Toyota',
+                    price: '$79,999.99',
+                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
+                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
+                },
+            ]
+        }
+    },
+    methods: {
+        redirectCar(vehicleId) {
+            this.$router.push({name: 'details_car', params: {id: vehicleId}});
         }
     },
     computed: {
@@ -390,5 +456,27 @@ export default {
 
 .align-content-center {
     align-content: center;
+}
+
+.box-comment {
+    box-sizing: border-box;
+    height: 10em;
+}
+.comment-textarea {
+    resize: none;
+    width: 100%;
+    outline: none;
+    height: 100%;
+}
+
+.list-vehicles {
+    display: flex;
+    overflow: auto;
+    margin: 1em 0 0 0;
+}
+
+.card-vehicle {
+    width: 30%;
+    margin: 0 1em 0 1em;
 }
 </style>
