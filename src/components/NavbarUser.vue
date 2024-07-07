@@ -11,8 +11,8 @@
             max-width="80"
           ></v-img>
         </v-toolbar-title>
-        <router-link class="color-link ml-14" :to="{ name: 'home' }">Inicio</router-link>
-        <router-link class="color-link ml-7" :to="{ name: 'vehicles_search' }">Explorar</router-link>
+        <router-link class="color-link ml-14" :to="{ name: this.tabLinkName1 }">{{tab1()}}</router-link>
+        <router-link class="color-link ml-7" :to="{ name: this.tabLinkName2 }">{{tab2()}}</router-link>
         <v-spacer></v-spacer>
         <v-avatar>
           <img
@@ -80,6 +80,8 @@ export default {
   data() {
     return {
       show: true,
+      tabLinkName1: null,
+      tabLinkName2: null,
       user: {
         initials: 'JD',
         fullName: 'John Doe',
@@ -92,6 +94,28 @@ export default {
     logout() {
       this.$store.dispatch('logout')
       this.$router.push({name: 'login'})
+    },
+    tab1() {
+      const role = this.$store.getters.userRole;
+      if (role == ['AdminUserGroup']) {
+        this.tabLinkName1 = 'vehicles';
+        return "Vehiculos";
+      }
+      if (role == ['ClientUserGroup']) {
+        this.tabLinkName1 = 'home';
+        return "Inicio";
+      }
+    },
+    tab2() {
+      const role = this.$store.getters.userRole;
+      if (role == ['AdminUserGroup']) {
+        this.tabLinkName2 = 'users';
+        return "Usuarios";
+      }
+      if (role == ['ClientUserGroup']) {
+        this.tabLinkName2 = 'vehicles_search';
+        return "Explorar";
+      }
     }
   },
 }
@@ -101,4 +125,4 @@ color-link {
   color: #828282;
   text-decoration: none;
 }
-</style>
+</style>        
