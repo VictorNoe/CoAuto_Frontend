@@ -28,14 +28,14 @@
       FooterUser,
       NavbarUser
     },
+    data() {
+    return {
+      showNavbar: false,
+      showFooter: false
+    };
+  },
     computed: {
       ...mapGetters(['isAuthenticated']),
-      showNavbar() {
-        return this.isAuthenticated && !this.$route.meta.hideNavbarFooter;
-      },
-      showFooter() {
-        return this.isAuthenticated && !this.$route.meta.hideNavbarFooter && this.$store.getters.userRole == "ClientUserGroup";
-      }
     },
     watch: {
       '$route'(to) {

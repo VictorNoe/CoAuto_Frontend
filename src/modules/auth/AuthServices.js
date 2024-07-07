@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL_LOGIN = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/login';
 const API_URL_RECOVERY_ACCOUNT = ''
-const API_URL_CONFIRM_ACCOUNT = ''
+const API_URL_CONFIRM_ACCOUNT = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/confirm_sign_up'
 
 const login = async (email, password) => {
     try {
@@ -28,12 +28,11 @@ const recoveryAccount = async (email) => {
     }
 };
 
-const confirmAccount = async (newPassword, email, code) => {
+const confirmAccount = async (email, confirmation_code) => {
     try {
         const response = await axios.post(API_URL_CONFIRM_ACCOUNT, {
-            newPassword,
             email,
-            code
+            confirmation_code
         });
         return response.data
     } catch (error) {

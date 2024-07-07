@@ -20,7 +20,7 @@
                 <div class="text-caption">
                     ¿No resibiste tu codigo? <a href="#" @click.prevent="otp = ''">Reenviar</a>
                 </div>
-                <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="2000">
+                <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="2000" top>
                     {{ text }}
                 </v-snackbar>
             </v-card>
@@ -29,15 +29,23 @@
 </template>
 
 <script>
+import AuthServices from "../modules/auth/AuthServices"
+const { confirmAccount } = AuthServices;
 export default {
     props: {
         dialog: {
             type: Boolean,
             required: true
+        },
+        email: {
+            type: String,
+            required: true
         }
     },
     data() {
         return {
+            confirmEmail: this.email,
+            loading: false,
             localDialog: this.dialog,
             otp: '',
             validating: false,
@@ -62,18 +70,22 @@ export default {
             this.localDialog = false;
             this.handleDialogClose();
         },
-        onClick() {
-            this.validating = true
-
-            setTimeout(() => {
-                this.validating = false
-                if (this.otp === '111111') {
-                    this.closeDialog()
+        async onClick() {
+            try {
+                this.validating = true;
+                const result = await confirmAccount(this.confirmEmail, this.otp);
+                console.log(result);
+                if ( result.response.data.statusCode === 200 ) {
+                    return this.closeDialog()
                 }
+                this.validating = false;
+                this.text = result.response.data.message;
+                this.snackbar = true;
+            } catch (err) {
+                console.log(err);
+            } finally {
                 this.otp = ''
-                this.text = `Codigo invalido`
-                    this.snackbar = true
-            }, 2000)
+            }
         },
     }
 }

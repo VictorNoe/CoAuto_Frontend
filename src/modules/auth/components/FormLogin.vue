@@ -49,7 +49,7 @@
                   >
                     INICIAR SESIÓN
                   </v-btn>
-                  <p class="text-center mt-4">¿No recuerdas tu contraseña? <a @click="recoveryAccount()">Recuperar Cuenta</a></p>
+                  <p class="text-center mt-4" >¿No recuerdas tu contraseña? <a class="text-decoration-underline" @click="recoveryAccount()">Recuperar Cuenta</a></p>
                 </v-col>
                 <RecoveryAccount
                   :dialog.sync="dialog"
@@ -58,6 +58,7 @@
                 <ConfirmAccount
                   :dialog.sync="dialogConfirma"
                   @close-dialog="confirmAccountClone"
+                  :email.sync="email"
                 />
               </v-row>
             </v-container>
