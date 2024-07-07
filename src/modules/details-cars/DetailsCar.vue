@@ -20,6 +20,7 @@
                                 :src="image.src"
                                 v-bind:class="[outOfRangeImages && i == 3 ? 'image-thumbnail blur-img': 'image-thumbnail']"
                                 @click.stop="() => {dialog = true; imgIndex = i}"
+                                @mouseover="imagesIndex = i"
                                 >
                                 <h1
                                 v-if="i == 3 && outOfRangeImages"
@@ -130,8 +131,8 @@
             Reseñas
         </h1>
         <v-list>
-            <v-list-item v-for="(comment, i) in comments" :key="i">
-                <v-card class="w-100 my-4 pa-3">
+            <v-list-item v-for="(comment, i) in paginatedItems" :key="i">
+                <v-card class="w-100 my-4 pa-4">
                     <v-row>
                         <v-col cols="1">
                             <v-avatar
@@ -155,17 +156,46 @@
                             </div>
                         </v-col>
                     </v-row>
-
-
+                    {{comment.body}}
                 </v-card>
             </v-list-item>
         </v-list>
+        <v-pagination
+        v-model="page"
+        :length="pageCount"
+        :total-visible="5"
+        class="mt-2 mb-6"
+        ></v-pagination>
+        <v-card class="mx-4 my-6 pa-4">
+            <v-row>
+                <v-col cols="9" class="d-flex">
+                        <v-avatar
+                        >
+                            <img :src="comments[0].user.img" alt="alt">
+                        </v-avatar>
+                        <v-card-title primary-title>
+                            Karel Salgado
+                        </v-card-title>
+                </v-col>
+                <v-col cols="3" class="align-content-center">
+                    <v-rating
+                    color="yellow darken-3"
+                    background-color="grey darken-1"
+                    empty-icon="$ratingFull"
+                    hover
+                    length="5"
+                    size="21"
+                    ></v-rating>
+                </v-col>
+            </v-row>
+        </v-card>
         <v-dialog
         v-model="dialog"
-        content-class="no-boxShadow"      
+        content-class="no-boxShadow"
         >
             <v-row class="no-margin justify-center">
-                <v-col cols="12" md="8  ">
+                <v-col cols="0" md="2" @click="dialog = false" ></v-col>
+                <v-col cols="12" md="8">
                     <v-card style="margin:0">
                         <v-carousel hide-delimiters v-model="imgIndex"
                         height=""
@@ -178,6 +208,7 @@
                         </v-carousel>
                     </v-card>
                 </v-col>
+                <v-col cols="0" md="2" @click="dialog = false"></v-col>
             </v-row>
         </v-dialog>
     </v-container>
@@ -232,6 +263,9 @@ export default {
                 description: 'Osea es audi compralo pobre',
                 image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
             },
+            page: 1,
+            itemsPerPage: 3,
+
             rate: 4.8,
             comments:[
                 {
@@ -258,6 +292,14 @@ export default {
                     value: 3,
                     body: "asomre que pinshi carro tan brgas, psss es audi nmms que riko"
                 },
+                {
+                    user: {
+                        img: 'https://cdn-icons-png.freepik.com/512/145/145894.png',
+                        name: 'Karel Salgado'
+                    },
+                    value: 3,
+                    body: "asomre que pinshi carro tan brgas, psss es audi nmms que riko"
+                },
             ]
             ,
             dialog: false,
@@ -270,6 +312,14 @@ export default {
         },
         outOfRangeImages() {
             return this.images.length - 4;
+        },
+        pageCount() {
+            return Math.ceil(this.comments.length / this.itemsPerPage);
+        },
+        paginatedItems() {
+            const start = (this.page - 1) * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            return this.comments.slice(start, end);
         },
     }
 }
@@ -334,5 +384,11 @@ export default {
     margin: 0 !important;
 }
 
+.image-zoom {
+    position: relative;
+}
 
+.align-content-center {
+    align-content: center;
+}
 </style>
