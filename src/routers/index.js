@@ -99,6 +99,10 @@ const routes = [
                     title: 'Usuarios'
                 }
             },
+            {
+                path: '/rates_vehicles',
+                name: 'ratesVehicles',
+            }
         ]
     },
     {

@@ -1,5 +1,5 @@
 <template lang="">
-  <div>
+  <div v-if="showNav">
       <v-app-bar app
         color="white"
       >
@@ -14,11 +14,14 @@
         <router-link class="color-link ml-14" :to="{ name: this.tabLinkName1 }">{{tab1()}}</router-link>
         <router-link class="color-link ml-7" :to="{ name: this.tabLinkName2 }">{{tab2()}}</router-link>
         <v-spacer></v-spacer>
-        <v-avatar>
-          <img
-            src="https://cdn.vuetifyjs.com/images/john.jpg"
-            alt="John"
+        <v-avatar color="#2570EB">
+          <img v-if="user?.image !== ''"
+            :src="user?.image"
+            :alt="user?.name"
           >
+          <v-icon dark v-if="user?.image === ''">
+            mdi-account-circle
+          </v-icon>
         </v-avatar>
         <v-menu 
           offset-y
@@ -39,12 +42,15 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar
-                color="brown"
+                color="#2570EB"
               >
-                <img
-                  src="https://cdn.vuetifyjs.com/images/john.jpg"
-                  alt="John"
+                <img v-if="user?.image !== ''"
+                  :src="user?.image"
+                  :alt="user?.name"
                 >
+                <v-icon dark v-if="user?.image === ''">
+                  mdi-account-circle
+                </v-icon>
               </v-avatar>
               <h3>{{ user.fullName }}</h3>
               <p class="text-caption mt-1">
@@ -76,21 +82,42 @@
   </div>
 </template>
 <script>
+import store from '../utils/store';
+import apiGateway from '../utils/Http.gateway'
 export default {
   data() {
     return {
+      showNav: false,
       show: true,
       tabLinkName1: null,
       tabLinkName2: null,
       user: {
-        initials: 'JD',
-        fullName: 'John Doe',
-        email: 'john.doe@doe.com',
-        image: 'https://cdn.vuetifyjs.com/images/john.jpg',
+        fullName: '',
+        email: '',
+        image: '',
       },
     }
   },
+  created() {
+    const isAuthenticated = store.getters.isAuthenticated;
+    if (isAuthenticated) {
+      const data = this.info()
+      this.showNav = data
+    }
+  },
   methods: {
+    async info() {
+      try {
+        const response = await apiGateway.doPost('https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/get_user');
+        const data = response.data.userInfo;  
+        this.user.fullName = data.nameUser;
+        this.user.email = data.email;
+        this.user.image = data.profile_image;
+        return true;                          
+      } catch (error) {
+          console.error('Error agregando car', error);
+      }
+    },
     logout() {
       this.$store.dispatch('logout')
       this.$router.push({name: 'login'})
