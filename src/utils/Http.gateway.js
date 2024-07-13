@@ -31,11 +31,9 @@ client.interceptors.response.use(
     },
     async (error) => {
         if (!error.response) {
-            Alert.Toast('error',"El servidor no respondio").then(() => {
-                localStorage.removeItem("token");
-                router.push({ name: 'login' })
-
-            })
+            Alert.Toast('error',"El servidor no respondio")
+            store.dispatch('logout');
+            router.push({ name: 'login' });
             return Promise.reject(error)
         }
         if (error.response.status) {
@@ -44,17 +42,15 @@ client.interceptors.response.use(
                     Alert.Toast("error","Error en la peticion")
                     break;
                 case 401:
-                     Alert.Toast("error",'Sin sesión')
-                        .then(() => {
-                            localStorage.removeItem("token");
-                            router.push({ name: 'login' })
-                        })
+                    Alert.Toast("error",'Sin sesión')
+                    store.dispatch('logout');
+                    router.push({ name: 'login' });
                     break;
                 case 403:
                     Alert.Toast("error","Acceso denegado")
                     .then(() => {
-                        store.commit('LOGOUT');
-                    })
+                        store.dispatch('logout');
+                    });
                     break;
                 case 404:
                     Alert.Toast("error","Recurso no encontrado")

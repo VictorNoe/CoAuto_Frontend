@@ -2,13 +2,13 @@
     <v-container class="my-12 pa-6">
         <h2 class="text-center">Vehículos recientes</h2>
         <v-row>
-            <v-col v-for="vehicle in vehicles" :key="vehicle.id" cols="12" sm="4">
-                <v-card>
-                    <v-img :src="vehicle.image" height="200px" contain></v-img>
+            <v-col v-for="vehicle in vehicles" :key="vehicle.id_auto" cols="12" xl="3" lg="4" md="4" sm="6" xs="12">
+                <v-card class="pa-6">
+                    <v-img :src="vehicle.images[0]" height="200px" contain></v-img>
                     <v-card-title>{{ vehicle.model }}</v-card-title>
-                    <v-card-subtitle>{{ vehicle.brand }}</v-card-subtitle>
+                    <v-card-subtitle>{{ vehicle?.brand }}</v-card-subtitle>
                     <v-card-text>
-                        <p class="font-weight-bold p-color">{{ vehicle.price }}</p>
+                        <p class="font-weight-bold p-color">{{ divisa(vehicle.price)}}</p>
                         <p>{{ vehicle.description }}</p>
                     </v-card-text>
                 </v-card>
@@ -24,63 +24,39 @@
     </v-container>
 </template>
 <script>
+import LadingServices from '../LadingServices';
+const { getAllCars } = LadingServices;
 export default {
-    name: 'RecentVehicles',
+  name: 'RecentVehicles',
   data() {
     return {
       overlay: false,
-      vehicles: [
-        {
-          id: 1,
-          model: 'New SM5',
-          brand: 'Toyota',
-          price: '$79,999.99',
-          description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-          image: 'https://media.istockphoto.com/id/1150931120/es/foto/ilustraci%C3%B3n-3d-del-coche-blanco-compacto-gen%C3%A9rico-vista-frontal-lateral.jpg?s=612x612&w=0&k=20&c=HtnGCDaCYHMJ8BjrSusd7FGPMC1ZEkRUmNtGimthLWU='
-        },
-        {
-          id: 2,
-          model: 'New SM5',
-          brand: 'Toyota',
-          price: '$79,999.99',
-          description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-          image: 'https://media.istockphoto.com/id/1150931120/es/foto/ilustraci%C3%B3n-3d-del-coche-blanco-compacto-gen%C3%A9rico-vista-frontal-lateral.jpg?s=612x612&w=0&k=20&c=HtnGCDaCYHMJ8BjrSusd7FGPMC1ZEkRUmNtGimthLWU='
-        },
-        {
-          id: 3,
-          model: 'New SM5',
-          brand: 'Toyota',
-          price: '$79,999.99',
-          description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-          image: 'https://media.istockphoto.com/id/1150931120/es/foto/ilustraci%C3%B3n-3d-del-coche-blanco-compacto-gen%C3%A9rico-vista-frontal-lateral.jpg?s=612x612&w=0&k=20&c=HtnGCDaCYHMJ8BjrSusd7FGPMC1ZEkRUmNtGimthLWU='
-        },
-        {
-          id: 4,
-          model: 'New SM5',
-          brand: 'Toyota',
-          price: '$79,999.99',
-          description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-          image: 'https://media.istockphoto.com/id/1150931120/es/foto/ilustraci%C3%B3n-3d-del-coche-blanco-compacto-gen%C3%A9rico-vista-frontal-lateral.jpg?s=612x612&w=0&k=20&c=HtnGCDaCYHMJ8BjrSusd7FGPMC1ZEkRUmNtGimthLWU='
-        },
-        {
-          id: 5,
-          model: 'New SM5',
-          brand: 'Toyota',
-          price: '$79,999.99',
-          description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-          image: 'https://media.istockphoto.com/id/1150931120/es/foto/ilustraci%C3%B3n-3d-del-coche-blanco-compacto-gen%C3%A9rico-vista-frontal-lateral.jpg?s=612x612&w=0&k=20&c=HtnGCDaCYHMJ8BjrSusd7FGPMC1ZEkRUmNtGimthLWU='
-        },
-        {
-          id: 6,
-          model: 'New SM5',
-          brand: 'Toyota',
-          price: '$79,999.99',
-          description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-          image: 'https://media.istockphoto.com/id/1150931120/es/foto/ilustraci%C3%B3n-3d-del-coche-blanco-compacto-gen%C3%A9rico-vista-frontal-lateral.jpg?s=612x612&w=0&k=20&c=HtnGCDaCYHMJ8BjrSusd7FGPMC1ZEkRUmNtGimthLWU='
-        },
-      ]
+      vehicles: []
     };
-  }
+  },
+  async mounted() {
+    this.getAll();
+  },
+  methods: {
+    async getAll() {
+      try {
+        const {statusCode, data} = await getAllCars();
+        if (statusCode === 200) {
+          this.vehicles = data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    divisa(price) {
+      const formatter = Intl.NumberFormat('en-US', { 
+        style: 'currency', 
+        minimumFractionDigits: 2,
+        currency: 'USD' 
+      })
+      return formatter.format(price)
+    }
+  },
 }
 </script>
 <style scope>
