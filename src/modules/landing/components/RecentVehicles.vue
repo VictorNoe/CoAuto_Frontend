@@ -19,6 +19,7 @@
                 color="primary"
                 large
                 x-small
+                @click="car()"
             >Ver más</v-btn>
         </div>
     </v-container>
@@ -55,6 +56,9 @@ export default {
         currency: 'USD' 
       })
       return formatter.format(price)
+    },
+    car() {
+      this.$router.push({ name: 'vehicles_search' });
     }
   },
 }

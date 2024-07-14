@@ -5,7 +5,7 @@
                 <h1 class="my-8">Empezar el día nunca se ha sentido mejor.</h1>
                 <p class="my-8">¡Descubre todos los vehículos de tu interés, con la información más detallada en el mercado!</p>
                 <div class="my-8 text-center" >
-                    <v-btn color="primary" dark>Descubre ahora</v-btn>
+                    <v-btn color="primary" dark @click="car()">Descubre ahora</v-btn>
                 </div>
             </v-col>
             <v-col cols="12" md="6" >
@@ -21,7 +21,11 @@
 </template>
 <script>
 export default {
-    
+    methods: {
+        car() {
+            this.$router.push({ name: 'vehicles_search' });
+        }
+    },
 }
 </script>
 <style scope>
