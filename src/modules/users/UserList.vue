@@ -11,6 +11,10 @@
         </v-row>
         <v-row>
             <v-col>
+                <v-progress-linear v-if="loading" indeterminate color="blue"></v-progress-linear>
+                <div v-if="!loading && users.length === 0" class="col-12">
+                    <p>No hay registros disponibles.</p>
+                </div>
                 <v-simple-table class="elevation-2">
                     <template v-slot:default>
                         <thead>
@@ -25,12 +29,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in users" :key="item.id">
+                            <tr v-for="item in users" :key="item.id_user">
                                 <td>{{ item.id_user }}</td>
-                                <td><v-avatar size="36"><img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John"></v-avatar></td>
+                                <td><v-avatar size="36"><img :src="item.profile_image" :alt="item.name"></v-avatar></td>
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.email }}</td>
-                                <td><v-chip outlined>{{ item.role }}</v-chip></td>
+                                <td><v-chip outlined>{{ getRolText(item.id_role) }}</v-chip></td>
                                 <td><v-chip :color="getColor(item.status)" dark >{{ getStatusText(item.status) }}</v-chip></td>
                                 <td>
                                     <v-menu bottom left :close-on-click="true">
@@ -68,6 +72,8 @@
 </template>
 
 <script>
+    import UserServices from './UserServices';
+
     export default {
         data () {
             return {
@@ -79,32 +85,35 @@
                     'Rol',
                     'Estado'
                 ],
-                users: [
-                    {
-                        id_user: '1',
-                        img: 'img',
-                        name: 'Karel Salgado',
-                        email: '20213tn000@utez.edu.mx',
-                        role: 'Usuario',
-                        status: 1,
-                    },
-                    {
-                        id_user: '2',
-                        img: 'img',
-                        name: 'Karel Salgado',
-                        email: '20213tn000@utez.edu.mx',
-                        role: 'Usuario',
-                        status: 0,
-                    }
-                ]
+                users: [],
+                loading: false
             }
         },
+        async mounted() {
+            this.getUsers();
+        },
         methods: {
+            async getUsers() {
+                this.loading = true;
+                try {
+                    const {statusCode, data} = await UserServices.getAllUsers();
+                    if (statusCode === 200) {
+                        this.users = data;
+                    }
+                } catch (error) {
+                    console.error('Error fetching users:', error);
+                } finally {
+                    this.loading = false;
+                }
+            },
             getColor(status) {
                 return status === 1 ? 'green' : 'red';
             },
             getStatusText(status) {
                 return status === 1 ? 'Activo' : 'Inactivo';
+            },
+            getRolText(rol) {
+                return rol === 1 ? 'Administrador' : 'Cliente';
             }
         }
     }

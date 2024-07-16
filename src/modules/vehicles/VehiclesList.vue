@@ -9,7 +9,7 @@
                 <v-select class="mt-2" :items="headers" label="Filtro" dense outlined prepend-icon="mdi-filter-outline" />
             </v-col>
             <v-col cols="12" md="2">
-                <v-btn elevation="2" @click="dialog = true">Agregar auto</v-btn>
+                <v-btn class="mt-2" elevation="2" @click="dialog = true">Agregar auto</v-btn>
             </v-col>
             <AddVehicle :dialog.sync="dialog" @update:dialog="dialog = $event" @car-added="handleCarAdded" />
         </v-row>
