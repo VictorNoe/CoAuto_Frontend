@@ -1,4 +1,3 @@
-
 <template>
   <v-dialog v-model="localDialog" max-width="600">
     <v-card>
