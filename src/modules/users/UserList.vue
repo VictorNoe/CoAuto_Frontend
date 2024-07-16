@@ -31,7 +31,7 @@
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.email }}</td>
                                 <td><v-chip outlined>{{ item.role }}</v-chip></td>
-                                <td><v-chip :color="getColor(item.status)" dark >{{ item.status }}</v-chip></td>
+                                <td><v-chip :color="getColor(item.status)" dark >{{ getStatusText(item.status) }}</v-chip></td>
                                 <td>
                                     <v-menu bottom left :close-on-click="true">
                                         <template v-slot:activator="{ on, attrs }">
@@ -86,7 +86,7 @@
                         name: 'Karel Salgado',
                         email: '20213tn000@utez.edu.mx',
                         role: 'Usuario',
-                        status: 'Activo',
+                        status: 1,
                     },
                     {
                         id_user: '2',
@@ -94,21 +94,17 @@
                         name: 'Karel Salgado',
                         email: '20213tn000@utez.edu.mx',
                         role: 'Usuario',
-                        status: 'Inactivo',
+                        status: 0,
                     }
                 ]
             }
         },
         methods: {
             getColor(status) {
-                switch(status) {
-                    case 'Activo':
-                        return 'green';
-                    case 'Inactivo':
-                        return 'red';
-                    default:
-                        return 'grey';
-                }
+                return status === 1 ? 'green' : 'red';
+            },
+            getStatusText(status) {
+                return status === 1 ? 'Activo' : 'Inactivo';
             }
         }
     }

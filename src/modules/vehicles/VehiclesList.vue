@@ -37,19 +37,13 @@
                         <tbody>
                             <tr v-for="item in vehicles" :key="item.id_auto">
                                 <td>{{ item.id_auto }}</td>
-                                <td>
-                                    <v-avatar size="36">
-                                        <img :src="item.images[0]" :alt="item.model" />
-                                    </v-avatar>
-                                </td>
+                                <td><v-avatar size="36"><img :src="item.images[0]" :alt="item.model"/></v-avatar></td>
                                 <td>{{ item.model }}</td>
                                 <td>{{ item.brand }}</td>
                                 <td>{{ item.year }}</td>
                                 <td>{{ item.doors }}</td>
-                                <td>{{ item.price }}</td>
-                                <td>
-                                    <v-chip :color="getColor(item.status)" dark>{{ item.status }}</v-chip>
-                                </td>
+                                <td>${{ item.price }}</td>
+                                <td><v-chip :color="getColor(item.status)" dark>{{ getStatusText(item.status) }}</v-chip></td>
                                 <td>
                                     <v-menu bottom left :close-on-click="true">
                                         <template v-slot:activator="{ on, attrs }">
@@ -131,14 +125,10 @@
                 }
             },
             getColor(status) {
-                switch (status) {
-                    case 1:
-                        return 'green';
-                    case 0:
-                        return 'red';
-                    default:
-                        return 'grey';
-                }
+                return status === 1 ? 'green' : 'red';
+            },
+            getStatusText(status) {
+                return status === 1 ? 'Activo' : 'Inactivo';
             }
         }
     };
