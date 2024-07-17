@@ -11,6 +11,7 @@ import DetailsCar from '@/modules/details-cars/DetailsCar.vue';
 import store from '../utils/store';
 import VehiclesList from '@/modules/vehicles/VehiclesList.vue';
 import UserList from '@/modules/users/UserList.vue';
+import BlookRate from '../modules/rates-block/BlockRate.vue';
 
 Vue.use(VueRouter)
 
@@ -102,6 +103,12 @@ const routes = [
             {
                 path: '/rates_vehicles',
                 name: 'ratesVehicles',
+                component: BlookRate,
+                meta: {
+                    requiresAuth: true,
+                    roles: ['AdminUserGroup'],
+                    title: 'Reseñas'
+                }
             }
         ]
     },

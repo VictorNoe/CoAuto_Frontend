@@ -58,7 +58,7 @@
                 <ConfirmAccount
                   :dialog.sync="dialogConfirma"
                   @close-dialog="confirmAccountClone"
-                  :email.sync="email"
+                  :email="email"
                 />
               </v-row>
             </v-container>
@@ -106,7 +106,7 @@ export default {
       try {
         this.loading = true
         const data = await login(this.email, this.password);
-        if (data.response.status === 412) {
+        if (data.response.status === 412) {  
           this.ConfirmAccount()
         } else if (data.response.status >= 400) {
           const title = data.response.data.message;
@@ -129,16 +129,16 @@ export default {
       }
     },
     recoveryAccount() {
-      this.dialog = true
+      this.dialog = true;
     },
     handleDialogClose(value) {
       this.dialog = value;
     },
     ConfirmAccount() {
-      this.dialogConfirma = true
+      this.dialogConfirma = true;
     },
     confirmAccountClone(value) {
-      this.dialogConfirma = value
+      this.dialogConfirma = value;
     }
   },
   components: {

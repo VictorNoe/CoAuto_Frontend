@@ -17,10 +17,13 @@
                 <v-btn class="my-4" color="primary" height="40" variant="flat" width="70%" :loading="validating"
                     :disabled="otp.length < 6 || loading" @click="onClick">Verificar</v-btn>
 
-                <div class="text-caption">
-                    ¿No resibiste tu codigo? <a href="#" @click.prevent="otp = ''">Reenviar</a>
+                <div v-if="!timerVisible" class="text-caption">
+                    ¿No resibiste tu codigo? <a href="#" @click.prevent="resendCode()">Reenviar</a>
                 </div>
-                <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="2000" top>
+                <div v-if="timerVisible" class="text-caption">
+                    Podras solicitar un nuevo codigo despues de <a>{{ formatTime(timer) }}</a>
+                </div>
+                <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="3000" top shaped>
                     {{ text }}
                 </v-snackbar>
             </v-card>
@@ -30,7 +33,7 @@
 
 <script>
 import AuthServices from "../modules/auth/AuthServices"
-const { confirmAccount } = AuthServices;
+const { confirmAccount, RecendCode } = AuthServices;
 export default {
     props: {
         dialog: {
@@ -51,12 +54,26 @@ export default {
             validating: false,
             text: '',
             snackbar: false,
-            snackbarColor: 'warning',
+            snackbarColor: '',
+            timer: 60,
+            buttonDisabled: false,
+            timerVisible: false,
+        }
+    },
+    mounted() {
+        const savedTimer = localStorage.getItem('validateAccountTimer');
+        if(savedTimer) {
+            const timer = parseInt(savedTimer);
+            if (!isNaN(timer) && timer > 0) {
+                this.timer = timer;
+                this.startTimer();
+            }
         }
     },
     watch: {
         dialog(newVal) {
             this.localDialog = newVal
+            this.confirmEmail = this.email; 
         }
     },
     methods: {
@@ -70,6 +87,19 @@ export default {
             this.localDialog = false;
             this.handleDialogClose();
         },
+        async resendCode() {
+            try {
+                this.otp = ''
+                this.startTimer();
+                this.text = 'Codigo de verificación enviado';
+                this.snackbarColor = 'success';
+                this.snackbar = true;
+                await RecendCode(this.confirmEmail);
+            } catch (error) {
+                console.error(error);
+            }
+            
+        },
         async onClick() {
             try {
                 this.validating = true;
@@ -80,6 +110,7 @@ export default {
                 }
                 this.validating = false;
                 this.text = result.response.data.message;
+                this.snackbarColor = 'warning',
                 this.snackbar = true;
             } catch (err) {
                 console.log(err);
@@ -87,6 +118,28 @@ export default {
                 this.otp = ''
             }
         },
+        startTimer() {
+            this.timerVisible = true;
+            this.buttonDisabled = true;
+
+            const intervalId = setInterval(() => {
+                if (this.timer > 0) {
+                    this.timer--;
+                    localStorage.setItem('validateAccountTimer', this.timer.toString());
+                } else {
+                    clearInterval(intervalId);
+                    this.timerVisible = false;
+                    this.buttonDisabled = false;
+                    this.timer = 60; 
+                    localStorage.removeItem('validateAccountTimer');
+                }
+            }, 1000);
+        },
+        formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
     }
 }
 </script>

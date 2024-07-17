@@ -60,7 +60,7 @@
           type="submit"
           variant="tonal"
           color="primary"
-          @click="load"
+          @click="register"
           block
         >
           INICIAR SESIÓN
@@ -72,8 +72,8 @@
     </div>
 </template>
 <script>
-
 import ConfirmAccount from '../../../components/ConfirmAccount.vue'
+//import RegisterServices from '../RegisterServices';
 export default {
   data() {
     return {
@@ -81,9 +81,12 @@ export default {
       show2: false,
       loading: false,
       dialog: false,
-      email: '',
-      password: '',
-      checkbox: false,
+      user: {
+        password: '',
+        email: '',
+        name: '',
+        lastname: ''
+      },
       rulesEmail: [
         value => !!value || 'Requiere llenar campo.',
         value => (value || '').length <= 20 || '20 caracteres maximo.',
@@ -99,12 +102,16 @@ export default {
     ConfirmAccount
   },
   methods: {
-    load() {
+    async register() {
       this.loading = true
-      setTimeout(() => {
-        this.dialog = true
-        this.loading = false
-      }, 1000)
+      try {
+        setTimeout(() => {
+          this.dialog = true
+          this.loading = false
+        }, 1000)
+      } catch (error) {
+        console.error(error);
+      }
     },
     handleDialogClose(value) {
       this.dialog = value;
