@@ -15,11 +15,11 @@
         <router-link class="color-link ml-7" :to="{ name: this.tabLinkName2 }">{{tab2()}}</router-link>
         <v-spacer></v-spacer>
         <v-avatar color="#2570EB">
-          <img v-if="user?.image !== ''"
+          <img v-if="user?.image !== null"
             :src="user?.image"
             :alt="user?.name"
           >
-          <v-icon dark v-if="user?.image === ''">
+          <v-icon dark v-if="user?.image === null">
             mdi-account-circle
           </v-icon>
         </v-avatar>
@@ -44,11 +44,11 @@
               <v-avatar
                 color="#2570EB"
               >
-                <img v-if="user?.image !== ''"
+                <img v-if="user?.image !== null"
                   :src="user?.image"
                   :alt="user?.name"
                 >
-                <v-icon dark v-if="user?.image === ''">
+                <v-icon dark v-if="user?.image === null">
                   mdi-account-circle
                 </v-icon>
               </v-avatar>
