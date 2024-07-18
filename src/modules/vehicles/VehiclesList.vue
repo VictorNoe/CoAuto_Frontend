@@ -3,10 +3,10 @@
     <h1>Autos</h1>
     <v-row>
       <v-col cols="12" md="4" class="align-self-center">
-        <v-text-field v-model="text" placeholder="Buscar Auto" outlined prepend-inner-icon="mdi-magnify" />
+        <v-text-field v-model="searchText" placeholder="Buscar Auto" outlined prepend-inner-icon="mdi-magnify" />
       </v-col>
       <v-col cols="12" md="2">
-        <v-select class="mt-2" :items="headers" label="Filtro" dense outlined prepend-icon="mdi-filter-outline" />
+        <v-select class="mt-2" :items="filterOptions" v-model="selectedFilter" label="Filtro" dense outlined prepend-icon="mdi-filter-outline" />
       </v-col>
       <v-col cols="12" md="2">
         <v-btn class="mt-2" elevation="2" @click="dialog = true">Agregar auto</v-btn>
@@ -16,44 +16,26 @@
     <v-row>
       <v-col>
         <v-progress-linear v-if="loading" indeterminate color="blue"></v-progress-linear>
-        <div v-if="!loading && vehicles.length === 0" class="col-12">
+        <div v-if="!loading && filteredVehicles.length === 0" class="col-12">
           <p>No hay registros disponibles.</p>
         </div>
         <v-simple-table v-else class="elevation-2">
           <template v-slot:default>
             <thead>
               <tr>
-                <th class="text-left">
-                  <h3>ID</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Imagen</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Modelo</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Marca</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Año</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Puertas</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Precio</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Estado</h3>
-                </th>
-                <th class="text-left">
-                  <h3>Acciones</h3>
-                </th>
+                <th class="text-left">ID</th>
+                <th class="text-left">Imagen</th>
+                <th class="text-left">Modelo</th>
+                <th class="text-left">Marca</th>
+                <th class="text-left">Año</th>
+                <th class="text-left">Puertas</th>
+                <th class="text-left">Precio</th>
+                <th class="text-left">Estado</th>
+                <th class="text-left">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in vehicles" :key="item.id_auto">
+              <tr v-for="item in filteredVehicles" :key="item.id_auto">
                 <td>{{ item.id_auto }}</td>
                 <td><v-avatar size="36"><img :src="item.images[0]" :alt="item.model" /></v-avatar></td>
                 <td>{{ item.model }}</td>
@@ -103,15 +85,15 @@
 import AddVehicle from './components/AddVehicle.vue';
 import VehicleServices from './VehiclesServices';
 import EditVehicle from './components/EditVehicle.vue';
+
 export default {
   components: {
-    AddVehicle,EditVehicle
+    AddVehicle,
+    EditVehicle
   },
   data() {
     return {
-      headers: [
-        'ID',
-        'Imagen',
+      filterOptions: [
         'Modelo',
         'Marca',
         'Año',
@@ -120,14 +102,21 @@ export default {
         'Estado',
       ],
       vehicles: [],
+      filteredVehicles: [],
+      searchText: '',
+      selectedFilter: '',
       dialog: false,
       editDialog: false,
       selectedVehicle: {},
       loading: false,
     };
   },
+  watch: {
+    searchText: 'filterVehicles',
+    selectedFilter: 'filterVehicles'
+  },
   async mounted() {
-    this.getCars();
+    await this.getCars();
   },
   methods: {
     async handleCarAdded() {
@@ -142,12 +131,36 @@ export default {
         const { statusCode, data } = await VehicleServices.getAllCars();
         if (statusCode === 200) {
           this.vehicles = data;
+          this.filterVehicles();
         }
       } catch (error) {
         console.error('Error fetching cars:', error);
       } finally {
         this.loading = false;
       }
+    },
+    filterVehicles() {
+      this.filteredVehicles = this.vehicles.filter(vehicle => {
+        const value = this.searchText.toLowerCase();
+        if (!value) return true;
+        
+        switch (this.selectedFilter) {
+          case 'Modelo':
+            return vehicle.model.toLowerCase().includes(value);
+          case 'Marca':
+            return vehicle.brand.toLowerCase().includes(value);
+          case 'Año':
+            return vehicle.year.toString().includes(value);
+          case 'Puertas':
+            return vehicle.doors.toString().includes(value);
+          case 'Precio':
+            return vehicle.price.toString().includes(value);
+          case 'Estado':
+            return this.getStatusText(vehicle.status).toLowerCase().includes(value);
+          default:
+            return Object.values(vehicle).some(val => val.toString().toLowerCase().includes(value));
+        }
+      });
     },
     getColor(status) {
       return status === 1 ? 'green' : 'red';
@@ -164,6 +177,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 h1 {
