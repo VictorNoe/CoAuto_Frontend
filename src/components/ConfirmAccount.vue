@@ -21,7 +21,7 @@
                     ¿No resibiste tu codigo? <a href="#" @click.prevent="resendCode()">Reenviar</a>
                 </div>
                 <div v-if="timerVisible" class="text-caption">
-                    Podras solicitar un nuevo codigo despues de <a>{{ formatTime(timer) }}</a>
+                    Puedes solicitar un nuevo codigo en <a>{{ formatTime(timer) }}</a>
                 </div>
                 <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="3000" top shaped>
                     {{ text }}
@@ -32,8 +32,9 @@
 </template>
 
 <script>
+import Alert from '@/utils/Alert';
 import AuthServices from "../modules/auth/AuthServices"
-const { confirmAccount, RecendCode } = AuthServices;
+const { confirmAccount, RecendCode, login } = AuthServices;
 export default {
     props: {
         dialog: {
@@ -43,11 +44,16 @@ export default {
         email: {
             type: String,
             required: true
+        },
+        password: {
+            type: String,
+            required: true
         }
     },
     data() {
         return {
             confirmEmail: this.email,
+            ConfirmPassword: this.password,
             loading: false,
             localDialog: this.dialog,
             otp: '',
@@ -55,7 +61,7 @@ export default {
             text: '',
             snackbar: false,
             snackbarColor: '',
-            timer: 60,
+            timer: 180,
             buttonDisabled: false,
             timerVisible: false,
         }
@@ -74,6 +80,7 @@ export default {
         dialog(newVal) {
             this.localDialog = newVal
             this.confirmEmail = this.email; 
+            this.ConfirmPassword = this.password;
         }
     },
     methods: {
@@ -105,7 +112,25 @@ export default {
                 this.validating = true;
                 const result = await confirmAccount(this.confirmEmail, this.otp);
                 console.log(result);
-                if ( result.response.data.statusCode === 200 ) {
+                if ( result?.statusCode === 200 ) {
+                    Alert.Toast('success', 'Se a validado tu correo correctamente')
+                    const data = await login(this.confirmEmail, this.ConfirmPassword);
+                    if (data.response.status === 412) {  
+                    this.ConfirmAccount()
+                    } else if (data.response.status >= 400) {
+                        const title = data.response.data.message;
+                        Alert.Toast('error', title)
+                    } else {
+                        localStorage.setItem('token', data.response.IdToken);
+                        this.$store.dispatch('login', data.response.IdToken);
+                    if (data.role == 'ClientUserGroup') {
+                        this.$router.push({ name: 'home' });
+                    }
+                    if (data.role == 'AdminUserGroup') {
+                        this.$router.push({ name: 'vehicles' });
+                    }
+                        Alert.Toast('success', 'Bienvenido')
+                    }
                     return this.closeDialog()
                 }
                 this.validating = false;

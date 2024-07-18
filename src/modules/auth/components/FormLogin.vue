@@ -59,6 +59,7 @@
                   :dialog.sync="dialogConfirma"
                   @close-dialog="confirmAccountClone"
                   :email="email"
+                  :password="password"
                 />
               </v-row>
             </v-container>
@@ -83,7 +84,7 @@ export default {
       checkbox: false,
       rulesEmail: [
         value => !!value || 'Requiere llenar campo.',
-        value => (value || '').length <= 50 || '20 caracteres maximo.',
+        value => (value || '').length <= 30 || '30 caracteres maximo.',
         value => (value || '').length >= 8 || '8 caracteres minimo.',
         value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
