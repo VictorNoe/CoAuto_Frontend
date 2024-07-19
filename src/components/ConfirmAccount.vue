@@ -18,10 +18,10 @@
                     :disabled="otp.length < 6 || loading" @click="onClick">Verificar</v-btn>
 
                 <div v-if="!timerVisible" class="text-caption">
-                    ¿No resibiste tu codigo? <a href="#" @click.prevent="resendCode()">Reenviar</a>
+                    ¿No recibiste tu código? <a href="#" @click.prevent="resendCode()">Reenviar</a>
                 </div>
                 <div v-if="timerVisible" class="text-caption">
-                    Puedes solicitar un nuevo codigo en <a>{{ formatTime(timer) }}</a>
+                    Puedes solicitar un nuevo código en <a>{{ formatTime(timer) }}</a>
                 </div>
                 <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="3000" top shaped>
                     {{ text }}
