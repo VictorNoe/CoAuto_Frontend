@@ -5,64 +5,99 @@
         <span class="headline">Agregar Auto</span>
       </v-card-title>
       <v-card-text>
-        <v-container>
-          <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.model" label="Modelo" required :rules="modelRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.brand" label="Marca" required :rules="brandRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.year" label="Año" type="number" required :rules="yearRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.price" label="Precio" type="number" required :rules="priceRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.type" label="Tipo" required :rules="typeRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.fuel" label="Combustible" required :rules="fuelRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.doors" label="Puertas" type="number" required :rules="doorsRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.engine" label="Motor" required :rules="engineRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.height" label="Altura" type="number" required :rules="heightRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.width" label="Ancho" type="number" required :rules="widthRules"></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="vehicle.length" label="Longitud" type="number" required :rules="lengthRules"></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-textarea v-model="vehicle.description" label="Descripción" required :rules="descriptionRules"></v-textarea>
-            </v-col>
-            <v-col cols="12">
-              <v-row>
-                <v-col v-for="(image, index) in images" :key="index" cols="12">
-                  <v-card>
-                    <v-img v-if="imagePreviews[index]" :src="imagePreviews[index]" height="150" contain class="mb-3"></v-img>
-                    <input type="file" @change="handleFileUpload($event, index)" accept="image/*" style="display: none" ref="imageInput">
-                    <v-btn color="blue" dark @click="$refs.imageInput[index].click()" v-if="!imagePreviews[index]">Subir Imagen</v-btn>
-                    <v-alert v-if="imageSizeError[index]" type="error">La imagen no debe pesar mas de 5MB</v-alert>
-                    <v-alert v-if="duplicateImageError[index]" type="error">Esta imagen ya ha sido seleccionada, selecciona otra</v-alert>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-container>
+        <v-stepper v-model="step">
+          <v-stepper-header>
+            <v-stepper-step :complete="step > 1" step="1">General</v-stepper-step>
+            <v-stepper-step :complete="step > 2" step="2">Detalles</v-stepper-step>
+            <v-stepper-step step="3">Imágenes</v-stepper-step>
+          </v-stepper-header>
+
+          <v-stepper-items>
+            <!-- Step 1: General -->
+            <v-stepper-content step="1">
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.model" label="Modelo" required :rules="modelRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.brand" label="Marca" required :rules="brandRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.year" label="Año" type="number" required :rules="yearRules"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-card-actions>
+                <v-btn color="blue darken-1" text @click="step = 2">Siguiente</v-btn>
+              </v-card-actions>
+            </v-stepper-content>
+
+            <!-- Step 2: Detalles -->
+            <v-stepper-content step="2">
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.price" label="Precio" type="number" required :rules="priceRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.type" label="Tipo" required :rules="typeRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.fuel" label="Combustible" required :rules="fuelRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.doors" label="Número de puertas" type="number" required :rules="doorsRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.engine" label="Motor" required :rules="engineRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.height" label="Altura" type="number" required :rules="heightRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.width" label="Ancho" type="number" required :rules="widthRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="vehicle.length" label="Longitud" type="number" required :rules="lengthRules"></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea v-model="vehicle.description" label="Descripción" required :rules="descriptionRules"></v-textarea>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-card-actions>
+                <v-btn color="blue darken-1" text @click="step = 1">Atrás</v-btn>
+                <v-btn color="blue darken-1" text @click="step = 3">Siguiente</v-btn>
+              </v-card-actions>
+            </v-stepper-content>
+
+            <!-- Step 3: Imágenes -->
+            <v-stepper-content step="3">
+              <v-container>
+                <v-row>
+                  <v-col v-for="(image, index) in images" :key="index" cols="12">
+                    <v-card>
+                      <v-img v-if="imagePreviews[index]" :src="imagePreviews[index]" height="150" contain class="mb-3"></v-img>
+                      <input type="file" @change="handleFileUpload($event, index)" accept="image/*" style="display: none" ref="imageInput">
+                      <v-btn color="blue" dark @click="$refs.imageInput[index].click()" v-if="!imagePreviews[index]">Subir Imagen</v-btn>
+                      <v-alert v-if="imageSizeError[index]" type="error">La imagen no debe pesar mas de 5MB</v-alert>
+                      <v-alert v-if="duplicateImageError[index]" type="error">Esta imagen ya ha sido seleccionada, selecciona otra</v-alert>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-card-actions>
+                <v-btn color="blue darken-1" text @click="step = 2">Atrás</v-btn>
+                <v-btn color="blue darken-1" text @click="save" :disabled="!validForm">Guardar</v-btn>
+              </v-card-actions>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-        <v-btn color="blue darken-1" text @click="save" :disabled="!validForm">Guardar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -81,6 +116,7 @@ export default {
   },
   data() {
     return {
+      step: 1,
       localDialog: this.dialog,
       vehicle: {
         model: '',
@@ -104,23 +140,24 @@ export default {
     };
   },
   computed: {
-    validForm() {
-      return (
-        this.modelRules.length === 0 &&
-        this.brandRules.length === 0 &&
-        this.yearRules.length === 0 &&
-        this.priceRules.length === 0 &&
-        this.typeRules.length === 0 &&
-        this.fuelRules.length === 0 &&
-        this.doorsRules.length === 0 &&
-        this.engineRules.length === 0 &&
-        this.heightRules.length === 0 &&
-        this.widthRules.length === 0 &&
-        this.lengthRules.length === 0 &&
-        this.descriptionRules.length === 0 &&
-        this.images.every((image, index) => !this.imageSizeError[index] && !this.duplicateImageError[index])
-      );
-    },
+  validForm() {
+    return (
+      this.vehicle.model &&
+      this.vehicle.brand &&
+      this.vehicle.year &&
+      this.vehicle.price &&
+      this.vehicle.type &&
+      this.vehicle.fuel &&
+      this.vehicle.doors &&
+      this.vehicle.engine &&
+      this.vehicle.height &&
+      this.vehicle.width &&
+      this.vehicle.length &&
+      this.vehicle.description   &&    this.imagePreviews.some(preview => preview) &&
+        !this.imageSizeError.includes(true) &&
+        !this.duplicateImageError.includes(true)
+    );
+},
     modelRules() {
       return [
         value => !!value || 'El modelo es requerido',
@@ -160,7 +197,7 @@ export default {
     doorsRules() {
       return [
         value => !!value || 'El número de puertas es requerido',
-        value => /^\d+$/.test(value) || 'El número de puertas debe ser un número'
+        value => /^\d+$/.test(value) || 'El número de puertas debe ser un número válido'
       ];
     },
     engineRules() {
@@ -228,6 +265,32 @@ export default {
       this.imageSizeError = new Array(6).fill(false);
       this.duplicateImageError = new Array(6).fill(false);
     },
+    handleFileUpload(event, index) {
+      const file = event.target.files[0];
+      if (file && index >= 0 && index < 6) {
+        if (file.size > 5242880) { 
+          this.$set(this.imageSizeError, index, true);
+          this.$refs.imageInput[index].value = ''; 
+          return;
+        } else {
+          this.$set(this.imageSizeError, index, false);
+        }
+        const selectedImages = this.images.filter((img, idx) => idx !== index && img);
+        if (selectedImages.some(img => img.name === file.name)) {
+          this.$set(this.duplicateImageError, index, true);
+          this.$refs.imageInput[index].value = ''; 
+          return;
+        } else {
+          this.$set(this.duplicateImageError, index, false);
+        }
+        this.$set(this.images, index, file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.$set(this.imagePreviews, index, e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
     async save() {
       try {
         if (!this.validForm) {
@@ -238,8 +301,10 @@ export default {
         this.vehicle.image_urls = uploadedUrls;
 
         const response = await VehiclesServices.addCar(this.vehicle);
-        console.log(response.data);
-        this.close();
+        if(response.statusCode == 200){
+          this.$emit("car-added",false)
+          this.close();
+        }
       } catch (error) {
         console.error('Error', error);
       } finally {
@@ -277,43 +342,6 @@ export default {
 
       return uploadedUrls;
     },
-    handleFileUpload(event, index) {
-      const file = event.target.files[0];
-      if (file && index >= 0 && index < 6) {
-        // Validar tamaño de imagen
-        if (file.size > 5242880) { // 5MB in bytes
-          this.$set(this.imageSizeError, index, true);
-          this.$refs.imageInput[index].value = ''; // Limpiar el valor del input file
-          return;
-        } else {
-          this.$set(this.imageSizeError, index, false);
-        }
-
-        // Validar duplicados
-        const selectedImages = this.images.filter((img, idx) => idx !== index && img);
-        if (selectedImages.some(img => img.name === file.name)) {
-          this.$set(this.duplicateImageError, index, true);
-          this.$refs.imageInput[index].value = ''; // Limpiar el valor del input file
-          return;
-        } else {
-          this.$set(this.duplicateImageError, index, false);
-        }
-
-        // Actualizar imagen y previsualización
-        this.$set(this.images, index, file);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.$set(this.imagePreviews, index, e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
   }
 };
 </script>
-
-<style scoped>
-.v-card {
-  margin-bottom: 15px;
-}
-</style>

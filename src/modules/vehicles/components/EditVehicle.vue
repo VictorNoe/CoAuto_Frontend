@@ -1,84 +1,110 @@
 <template>
     <v-dialog v-model="localDialog" max-width="600">
-        <v-card>
-            <v-card-title>
-                <span class="headline">Editar Auto</span>
-            </v-card-title>
-            <v-card-text>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Editar Auto</span>
+        </v-card-title>
+        <v-card-text>
+          <v-stepper v-model="step">
+            <v-stepper-header>
+              <v-stepper-step :complete="step > 1" step="1">General</v-stepper-step>
+              <v-stepper-step :complete="step > 2" step="2">Detalles</v-stepper-step>
+              <v-stepper-step step="3">Imágenes</v-stepper-step>
+            </v-stepper-header>
+  
+            <v-stepper-items>
+              <!-- Step 1: General -->
+              <v-stepper-content step="1">
                 <v-container>
-                    <v-row>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.model" label="Modelo" required
-                                :rules="modelRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.brand" label="Marca" required
-                                :rules="brandRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.year" label="Año" type="number" required
-                                :rules="yearRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.price" label="Precio" type="number" required
-                                :rules="priceRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.type" label="Tipo" required
-                                :rules="typeRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.fuel" label="Combustible" required
-                                :rules="fuelRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.doors" label="Puertas" type="number" required
-                                :rules="doorsRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.engine" label="Motor" required
-                                :rules="engineRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.height" label="Altura" type="number" required
-                                :rules="heightRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.width" label="Ancho" type="number" required
-                                :rules="widthRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="vehicle.length" label="Longitud" type="number" required
-                                :rules="lengthRules"></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-textarea v-model="vehicle.description" label="Descripción" required
-                                :rules="descriptionRules"></v-textarea>
-                        </v-col>
-                        <v-col cols="12" v-for="(image, index) in vehicle.images" :key="index">
-                        <v-file-input
-                            v-model="imageFiles[index]"
-                            label="Subir Imagen"
-                            accept="image/*"
-                            :rules="[value => !!value || 'Por favor, selecciona una imagen']"
-                            @change="onImageChange(index)"
-                        ></v-file-input>
-
-                        <v-img :src="imagePreviews[index]" v-if="imagePreviews[index]" class="mt-2" max-height="200"></v-img>
-                        <v-alert v-if="duplicateImageError[index]" type="error">Imagen duplicada</v-alert>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.model" label="Modelo" required :rules="modelRules"></v-text-field>
                     </v-col>
-                    </v-row>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.brand" label="Marca" required :rules="brandRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.year" label="Año" type="number" required :rules="yearRules"></v-text-field>
+                    </v-col>
+                  </v-row>
                 </v-container>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-                <v-btn color="blue darken-1" text @click="save" :disabled="!validForm">Guardar</v-btn>
-            </v-card-actions>
-        </v-card>
+                <v-card-actions>
+                  <v-btn color="blue darken-1" text @click="step = 2">Siguiente</v-btn>
+                </v-card-actions>
+              </v-stepper-content>
+  
+              <!-- Step 2: Detalles -->
+              <v-stepper-content step="2">
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.price" label="Precio" type="number" required :rules="priceRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.type" label="Tipo" required :rules="typeRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.fuel" label="Combustible" required :rules="fuelRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.doors" label="Número de puertas" type="number" required :rules="doorsRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.engine" label="Motor" required :rules="engineRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.height" label="Altura" type="number" required :rules="heightRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.width" label="Ancho" type="number" required :rules="widthRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field v-model="vehicle.length" label="Longitud" type="number" required :rules="lengthRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-textarea v-model="vehicle.description" label="Descripción" required :rules="descriptionRules"></v-textarea>
+                    </v-col>
+                  </v-row>
+                </v-container>
+                <v-card-actions>
+                  <v-btn color="blue darken-1" text @click="step = 1">Atrás</v-btn>
+                  <v-btn color="blue darken-1" text @click="step = 3">Siguiente</v-btn>
+                </v-card-actions>
+              </v-stepper-content>
+  
+              <!-- Step 3: Imágenes -->
+              <v-stepper-content step="3">
+                <v-container>
+                  <v-row>
+                    <v-col cols="12" v-for="(image, index) in vehicle.images" :key="index">
+                          <v-file-input
+                              v-model="imageFiles[index]"
+                              label="Subir Imagen"
+                              accept="image/*"
+                              :rules="[value => !!value || 'Por favor, selecciona una imagen']"
+                              @change="onImageChange(index)"
+                          ></v-file-input>
+  
+                          <v-img :src="imagePreviews[index]" v-if="imagePreviews[index]" class="mt-2" max-height="200"></v-img>
+                          <v-alert v-if="duplicateImageError[index]" type="error">Imagen duplicada</v-alert>
+                      </v-col>
+                  </v-row>
+                </v-container>
+                <v-card-actions>
+                  <v-btn color="blue darken-1" text @click="step = 2">Atrás</v-btn>
+                  <v-btn color="blue darken-1" text @click="save" :disabled="!validForm">Guardar</v-btn>
+                </v-card-actions>
+              </v-stepper-content>
+            </v-stepper-items>
+          </v-stepper>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
-</template>
-
+  </template>
 <script>
 import Alerts from '../../../utils/Alert';
 import VehiclesServices from '../VehiclesServices';
@@ -98,6 +124,8 @@ export default {
         return {
             localDialog: this.dialog,
             vehicle: { ...this.vehicleData },
+            imageFiles: new Array(6).fill(null),
+            step:1,
             imagePreviews: new Array(6).fill(null),
             imageSizeError: new Array(6).fill(false),
             duplicateImageError: new Array(6).fill(false)
@@ -105,23 +133,23 @@ export default {
     },
     computed: {
         validForm() {
-            return (
-                this.modelRules.length === 0 &&
-                this.brandRules.length === 0 &&
-                this.yearRules.length === 0 &&
-                this.priceRules.length === 0 &&
-                this.typeRules.length === 0 &&
-                this.fuelRules.length === 0 &&
-                this.doorsRules.length === 0 &&
-                this.engineRules.length === 0 &&
-                this.heightRules.length === 0 &&
-                this.widthRules.length === 0 &&
-                this.lengthRules.length === 0 &&
-                this.descriptionRules.length === 0 &&
-                !this.imageSizeError.includes(true) &&
-                !this.duplicateImageError.includes(true)
-            );
-        },
+    return (
+      this.vehicle.model &&
+      this.vehicle.brand &&
+      this.vehicle.year &&
+      this.vehicle.price &&
+      this.vehicle.type &&
+      this.vehicle.fuel &&
+      this.vehicle.doors &&
+      this.vehicle.engine &&
+      this.vehicle.height &&
+      this.vehicle.width &&
+      this.vehicle.length &&
+      this.vehicle.description   &&    this.imagePreviews.some(preview => preview) &&
+        !this.imageSizeError.includes(true) &&
+        !this.duplicateImageError.includes(true)
+    );
+},
         modelRules() {
             return [
                 value => !!value || 'El modelo es requerido',
@@ -251,7 +279,7 @@ export default {
 
                 const response = await VehiclesServices.updateCar(this.vehicle);
                 console.log(response.data);
-                this.$emit('car-updated');
+                this.$emit('car-updated',false);
                 this.close();
             } catch (error) {
                 console.error('Error', error);

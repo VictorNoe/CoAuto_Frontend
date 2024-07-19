@@ -119,11 +119,13 @@ export default {
     await this.getCars();
   },
   methods: {
-    async handleCarAdded() {
+    async handleCarAdded(value) {
       await this.getCars();
+      this.dialog = value;
     },
-    async handleCarUpdated() {
+    async handleCarUpdated(value) {
       await this.getCars();
+      this.editDialog = value;
     },
     async getCars() {
       this.loading = true;
