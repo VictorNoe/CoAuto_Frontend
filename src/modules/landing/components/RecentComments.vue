@@ -5,8 +5,9 @@
             <v-col v-for="comment in comments" :key="comment.id_rate" cols="12" xl="3" lg="4" md="4" sm="6" xs="12">
                 <v-card>
                     <v-card-title>
-                        <v-avatar size="50">
-                          <img :src="comment.profile_image" alt="Avatar">
+                        <v-avatar size="50" color="#2570EB">
+                          <img :src="comment.profile_image" alt="Avatar"  v-if="comment?.profile_image !== null">
+                          <v-icon dark v-if="comment?.profile_image === null">mdi-account-circle</v-icon>
                         </v-avatar>
                         <span class="ml-4">{{ comment.name }}</span>
                     </v-card-title>
@@ -38,6 +39,7 @@ export default {
       try {
         const {statusCode, data} = await getAllRate();
         if (statusCode === 200) {
+          console.log(data);
           this.comments = data;
         }
       } catch (error) {

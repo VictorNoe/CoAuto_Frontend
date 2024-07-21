@@ -2,8 +2,15 @@
     <v-container class="my-12 pa-6">
         <h2 class="text-center">Vehículos recientes</h2>
         <v-row>
-            <v-col v-for="vehicle in vehicles" :key="vehicle.id_auto" cols="12" xl="3" lg="4" md="4" sm="6" xs="12">
-                <v-card class="pa-6">
+            <v-col 
+              v-for="vehicle in vehicles" 
+              :key="vehicle.id_auto" 
+              cols="12" xl="3" lg="4" md="4" sm="6" xs="12"
+            >
+                <v-card 
+                  class="pa-6 mx-auto"
+                  max-width="344"
+                >
                     <v-img :src="vehicle.images[0]" height="200px" contain></v-img>
                     <v-card-title>{{ vehicle.model }}</v-card-title>
                     <v-card-subtitle>{{ vehicle?.brand }}</v-card-subtitle>

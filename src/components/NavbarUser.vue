@@ -15,11 +15,11 @@
         <router-link class="color-link ml-7" :to="{ name: this.tabLinkName2 }">{{tab2()}}</router-link>
         <v-spacer></v-spacer>
         <v-avatar color="#2570EB">
-          <img v-if="user?.image !== null"
+          <img v-if="user?.image !== null && user?.image !== ''"
             :src="user?.image"
             :alt="user?.name"
           >
-          <v-icon dark v-if="user?.image === null">
+          <v-icon dark v-if="user?.image === null || user?.image === ''">
             mdi-account-circle
           </v-icon>
         </v-avatar>
@@ -30,6 +30,8 @@
         >
         <template v-slot:activator="{ on, attrs }">
           <v-btn 
+            id="profile"
+            title="Title"
             icon
             @click="show = !show"
             v-bind="attrs"

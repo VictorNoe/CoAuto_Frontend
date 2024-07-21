@@ -24,7 +24,7 @@
         </v-btn>
       </v-col>
       <v-col
-        class="py-4 d-flex flex-column justify-space-between align-center"
+        class="py-2 d-flex flex-column justify-space-between align-center"
         cols="12"
       >
         <v-img
@@ -34,21 +34,27 @@
             max-width="135.64"
         ></v-img>
       </v-col>
-      <h2 class="grey--text py-4">Redes sociales</h2>
       <v-col
-        class="lighten-2 py-4 text-center white--text"
+        class="py-2 d-flex flex-column justify-space-between align-center"
         cols="12"
       >
-        <v-btn
+        <div class="grey--text justify-center text-h5 font-weight-bold py-2">Redes sociales</div>
+      </v-col>
+      <v-col
+        class="lighten-2 text-center white--text"
+        cols="12"
+      >
+        <a
               v-for="icon in icons"
               :key="icon"
-              color="#828282"
               icon
+              href="https://www.instagram.com/p/C8xExjJsOV5/"
+              aria-label="Social media"
             >
-              <v-icon size="30px">
+              <v-icon size="40px" class="pl-2 pr-2 align-center" color="#2570EB">
                 {{ icon }}
               </v-icon>
-          </v-btn>
+          </a>
       </v-col>
       <v-col
         class="py-4 text-center grey--text"
