@@ -19,7 +19,10 @@
         </v-col>
         <v-col md="9" sm="12">
           <v-row>
-            <v-col v-for="vehicle in paginatedItems" :key="vehicle.id_auto" class="my-2" lg="4" md="6" sm="12">
+            <v-col v-if="loading" class="d-flex justify-center align-center" style="height: 300px;">
+              <v-progress-circular indeterminate></v-progress-circular>
+            </v-col>
+            <v-col v-else v-for="vehicle in paginatedItems" :key="vehicle.id_auto" class="my-2" lg="4" md="6" sm="12">
               <v-card class="vehicle-card" @click="redirectCar(vehicle.id_auto)">
                 <v-img :src="vehicle.images[0]" height="150px" contain></v-img>
                 <v-card-title>{{ vehicle.model }}</v-card-title>
@@ -82,7 +85,7 @@
             this.applyFilters();
           }
         } catch (error) {
-            console.error(error);
+          console.error(error);
         } finally {
           this.loading = false;
         }
