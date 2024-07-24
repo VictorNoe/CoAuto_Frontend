@@ -11,12 +11,12 @@
                   class="pa-6 mx-auto"
                   max-width="344"
                 >
-                    <v-img :src="vehicle.images[0]" height="200px" contain></v-img>
+                    <v-img :src="vehicle.images[0]" height="200px" aspect-ratio="2" contain></v-img>
                     <v-card-title>{{ vehicle.model }}</v-card-title>
                     <v-card-subtitle>{{ vehicle?.brand }}</v-card-subtitle>
                     <v-card-text>
                         <p class="font-weight-bold p-color">{{ divisa(vehicle.price)}}</p>
-                        <p>{{ vehicle.description }}</p>
+                        <p>{{ vehicle.description.slice(0,15) }}...</p>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -50,7 +50,7 @@ export default {
       try {
         const {statusCode, data} = await getAllCars();
         if (statusCode === 200) {
-          this.vehicles = data;
+          this.vehicles = data.slice(0,6);
         }
       } catch (error) {
         console.error(error);
