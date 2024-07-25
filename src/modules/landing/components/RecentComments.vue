@@ -14,7 +14,7 @@
                     <v-card-subtitle>{{ comment.model }}</v-card-subtitle>
                     <v-card-text>
                         <v-rating color="yellow darken-3" background-color="grey darken-1" empty-icon="$ratingFull" :value="comment.value" readonly></v-rating>
-                        <p>{{ comment.comment }}</p>
+                        <p>{{ comment.comment.slice(0,15) }}...</p>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -40,7 +40,7 @@ export default {
         const {statusCode, data} = await getAllRate();
         if (statusCode === 200) {
           console.log(data);
-          this.comments = data;
+          this.comments = data.slice(0,3);
         }
       } catch (error) {
         console.error(error);
