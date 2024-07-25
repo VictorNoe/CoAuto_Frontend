@@ -4,16 +4,17 @@
         <v-row>
             <v-col  md="3" sm="12">
                 <v-card class="filter-card my-2">
-                    <v-card-tittle>
+                    <v-card-title>
                         Buscar auto
-                    </v-card-tittle>
+                    </v-card-title>
                 </v-card>
             </v-col>
             <v-col md="9" sm="12">
                 <v-row>
-                    <v-col v-for="vehicle in paginatedItems" :key="vehicle.id" class="my-2" lg="4" md="6" sm="12">
-                        <v-card class="vehicle-card" @click="redirectCar(vehicle.id)" >
-                            <v-img :src="vehicle.image" height="150px" contain></v-img>
+                    
+                    <v-col v-for="vehicle in paginatedItems" :key="vehicle.id_auto" class="my-2" lg="4" md="6" sm="12">
+                        <v-card class="vehicle-card" @click="redirectCar(vehicle.id_auto)" >
+                            <v-img :src="vehicle.images[0]" height="150px" contain></v-img>
                             <v-card-title>{{ vehicle.model }}</v-card-title>
                             <v-card-subtitle>{{ vehicle.brand }}</v-card-subtitle>
                             <v-card-text>
@@ -34,12 +35,14 @@
     </v-container>
 </template>
 <script>
+import service from './VehiclesSearch.js';
+
 export default {
     name: 'VehiclesSearch',
     data() {
         return {
             exampleVehicle: {
-                id: 1,
+                id_auto: 1,
                 model: 'New SM5',
                 brand: 'Toyota',
                 price: '$79,999.99',
@@ -52,26 +55,30 @@ export default {
         }
     },
     methods: {
-        loadVehicles() {
-            for(let i = 0; i<25; i++) {
-                this.vehicles.push(this.exampleVehicle);
-            }
+        async getVehicles() {
+            const response = await service.getAllCars();
+            this.vehicles = response.data;
+            console.log(this.vehicles);
         },
         redirectCar(vehicleId) {
             this.$router.push({name: 'details_car', params: {id: vehicleId}});
-        }
+        },
     },
     mounted() {
-        this.loadVehicles();
+        this.getVehicles();
     },
     computed: {
         pageCount() {
             return Math.ceil(this.vehicles.length / this.itemsPerPage);
         },
         paginatedItems() {
-            const start = (this.page - 1) * this.itemsPerPage;
-            const end = start + this.itemsPerPage;
-            return this.vehicles.slice(start, end);
+            if (this.vehicles.length > 0) {
+                const start = (this.page - 1) * this.itemsPerPage;
+                const end = start + this.itemsPerPage;
+                return this.vehicles.slice(start, end);
+            } else {
+                return this.vehicles;
+            }
         },
     }
 }

@@ -17,7 +17,7 @@
                             >
                             <div class="responsive-img-wrapper">
                                 <v-img
-                                :src="image.src"
+                                :src="image"
                                 v-bind:class="[outOfRangeImages && i == 3 ? 'image-thumbnail blur-img': 'image-thumbnail']"
                                 @click.stop="() => {dialog = true; imgIndex = i}"
                                 @mouseover="imagesIndex = i"
@@ -37,9 +37,9 @@
                         height=""
                         >
                             <v-carousel-item
-                            v-for="(image,i) in images"
+                            v-for="(image,i) in exampleVehicle.images"
                             :key="i"
-                            :src="image.src"
+                            :src="image"
                             @click.stop="() => {dialog = true; imgIndex = i}"
                             ></v-carousel-item>
                         </v-carousel>
@@ -57,11 +57,11 @@
                             mdi-star
                         </v-icon>
                         <h3 class="rate-font ms-1">
-                            {{ rate }} / 5.0
+                            {{ rate ? rate + '/ 5.0': 'Sin reseñas' }} 
                         </h3>
                     </div>
                     <h2>
-                        {{ exampleVehicle.price }}
+                        ${{ exampleVehicle.price }}
                     </h2>
                     {{exampleVehicle.description}}
                 </v-card>
@@ -74,25 +74,25 @@
                         <v-list-item class="stripped">
                             <v-list-item-title class="d-flex justify-space-between">
                                 <div class="w-100">Modelo</div>
-                                <div class="w-100">A5</div>
+                                <div class="w-100">{{exampleVehicle.model}}</div>
                             </v-list-item-title>
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-title class="d-flex justify-space-between">
                                 <div class="w-100">Marca</div>
-                                <div class="w-100">Audi</div>
+                                <div class="w-100">{{exampleVehicle.brand}}</div>
                             </v-list-item-title>
                         </v-list-item>
                         <v-list-item class="stripped">
                             <v-list-item-title class="d-flex justify-space-between">
                                 <div class="w-100">Año</div>
-                                <div class="w-100">2010</div>
+                                <div class="w-100">{{exampleVehicle.year}}</div>
                             </v-list-item-title>
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-title class="d-flex justify-space-between">
                                 <div class="w-100">Tipo</div>
-                                <div class="w-100">Electrico</div>
+                                <div class="w-100">{{exampleVehicle.type}}</div>
                             </v-list-item-title>
                         </v-list-item>
                     </v-list>
@@ -102,25 +102,25 @@
                         <v-list-item class="stripped">
                             <v-list-item-title class="d-flex justify-space-between">
                                 <div class="w-100">Combustible</div>
-                                <div class="w-100">Electrico</div>
+                                <div class="w-100">{{exampleVehicle.fuel}}</div>
                             </v-list-item-title>
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-title class="d-flex justify-space-between">
                                 <div class="w-100">Puertas</div>
-                                <div class="w-100">4</div>
+                                <div class="w-100">{{exampleVehicle.doors}}</div>
                             </v-list-item-title>
                         </v-list-item>
                         <v-list-item class="stripped">
                             <v-list-item-title class="d-flex justify-space-between">
                                 <div class="w-100">Motor</div>
-                                <div class="w-100">V6</div>
+                                <div class="w-100">{{exampleVehicle.engine}}</div>
                             </v-list-item-title>
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-title class="d-flex justify-space-between">
-                                <div class="w-100">Medidas</div>
-                                <div class="w-100">4.697 x 1.384 x 2.764</div>
+                                <div class="w-100">Medidas (mm)</div>
+                                <div class="w-100">{{exampleVehicle.length}} x {{exampleVehicle.height}} x {{exampleVehicle.width}}</div>
                             </v-list-item-title>
                         </v-list-item>
                     </v-list>
@@ -131,19 +131,32 @@
             Reseñas
         </h1>
         <v-list>
+            <v-list-item>
+                <div
+                class="w-100 my-4 pa-2 default-comment-card"
+                v-if="comments.length === 0"
+                >
+                    <v-card-title>
+                        UPS!
+                    </v-card-title>                        
+                    <v-card-subtitle class="rate-font">
+                        Parece que nadie ha dejado reseñas.
+                    </v-card-subtitle>
+                </div>
+            </v-list-item>
             <v-list-item v-for="(comment, i) in paginatedItems" :key="i">
                 <v-card class="w-100 my-4 pa-4">
                     <v-row>
                         <v-col cols="1">
                             <v-avatar
                             >
-                                <img :src="comment.user.img" alt="alt">
+                                <img src="https://www.hotelbooqi.com/wp-content/uploads/2021/12/128-1280406_view-user-icon-png-user-circle-icon-png.png" alt="alt">
                             </v-avatar>
                         </v-col>
                         <v-col cols="11">
                             <div>
                                 <v-card-title class="pa-0">
-                                    {{comment.user.name}}
+                                    {{comment.name}} {{comment.lastname}}
                                 </v-card-title>
                                 <v-rating
                                 empty-icon="$ratingFull"
@@ -156,7 +169,7 @@
                             </div>
                         </v-col>
                     </v-row>
-                    {{comment.body}}
+                    {{comment.comment}}
                 </v-card>
             </v-list-item>
         </v-list>
@@ -171,10 +184,10 @@
                 <v-col cols="12" md="9" class="d-flex">
                         <v-avatar
                         >
-                            <img :src="comments[0].user.img" alt="alt">
+                            <img :src="user.imageProfile ? user.imageProfile : 'https://www.hotelbooqi.com/wp-content/uploads/2021/12/128-1280406_view-user-icon-png-user-circle-icon-png.png'" alt="alt">
                         </v-avatar>
                         <v-card-title primary-title>
-                            Karel Salgado
+                            {{user.name}}
                         </v-card-title>
                 </v-col>
                 <v-col cols="12" md="3" class="align-content-center">
@@ -185,30 +198,39 @@
                     hover
                     length="5"
                     size="21"
+                    v-model="comment.value"
                     ></v-rating>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col cols="12">
-                    <v-card class="box-comment pa-3">
-                        <textarea
-                        placeholder="Escribe tu comentario aquí"
-                        class="comment-textarea"
-                        >
-                        </textarea>
-                    </v-card>
+                    <v-textarea
+                    :rules="commentRules"
+                    v-model="comment.comment"
+                    label="Comentario"
+                    auto-grow
+                    outlined
+                    :disabled="commentLoading"
+                    >
+                        </v-textarea>
                 </v-col>
             </v-row>
             <div class="w-100 d-flex my-4">
-                <v-btn color="primary" class="ms-auto">Comentar</v-btn>
+                <v-btn
+                color="primary"
+                class="ms-auto"
+                :disabled="!validForm"
+                @click="rateCar"
+                :loading="commentLoading"
+                >Comentar</v-btn>
             </div>
         </v-card>
         <h1 class="subheading">
             Más vehículos
         </h1>
         <div class="w-100 list-vehicles">
-            <v-card class="card-vehicle" v-for="(vehicle, index) in vehicles" :key="index" @click="redirectCar(vehicle.id)" >
-                <v-img :src="vehicle.image" height="150px" contain></v-img>
+            <v-card class="card-vehicle" v-for="(vehicle, index) in vehicles" :key="index" @click="redirectCar(vehicle.id_auto)" >
+                <v-img :src="vehicle.images[0]" height="150px" contain></v-img>
                 <v-card-title>{{ vehicle.model }}</v-card-title>
                 <v-card-subtitle>{{ vehicle.brand }}</v-card-subtitle>
                 <v-card-text>
@@ -229,9 +251,9 @@
                         height=""
                             >
                             <v-carousel-item
-                            v-for="(image, i) in images"
+                            v-for="(image, i) in exampleVehicle.images"
                             :key="i"
-                            :src="image.src"
+                            :src="image"
                             ></v-carousel-item>
                         </v-carousel>
                     </v-card>
@@ -242,6 +264,7 @@
     </v-container>
 </template>
 <script>
+import service from './DetailsCarService';
 export default {
     name: 'DetailsCar',
     data() {
@@ -257,114 +280,43 @@ export default {
                     text: 'Detalles',
                     disabled: true,
                 }          
-            ],
-            images: [
-                {
-                    src: 'https://wallpapercave.com/wp/XtJjBZT.jpg',
-                    i: 0,                    
-                },
-                {
-                    src: 'https://wallpapercave.com/wp/toBW8HX.jpg',
-                    i: 1,
-                },
-                {
-                    src: 'https://wallpapercave.com/wp/jLYUjUj.jpg',
-                    i: 2,
-                },
-                {
-                    src: 'https://wallpapercave.com/wp/tvlmgf1.jpg',
-                    i: 3,
-                },
-                {
-                    src: 'https://wallpapercave.com/wp/yzkqOsa.jpg',
-                    i: 3,
-                },
-
-                
-            ],            
+            ],        
             exampleVehicle:
             {
-                id: 1,
-                model: 'A5',
-                brand: 'Audi',
-                price: '$79,999.99',
-                description: 'Osea es audi compralo pobre',
-                image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
+                id_auto: 0,
+                model: '',
+                brand: '',
+                price: '',
+                description: '',
+                doors: 0,
+                fuel: '',
+                height: 0,
+                width: 0,
+                length: 0,
+                type: '',
+                year: 0,
+                status: 1,
+                images: [],
+                engine: '',
+            },
+            user: {
+                profileImage: null,
+                name: ''
             },
             page: 1,
             itemsPerPage: 3,
-            rate: 4.8,
-            comments:[
-                {
-                    user: {
-                        img: 'https://cdn-icons-png.freepik.com/512/145/145894.png',
-                        name: 'Karel Salgado'
-                    },
-                    value: 3,
-                    body: "asomre que pinshi carro tan brgas, psss es audi nmms que riko"
-                },
-                {
-                    user: {
-                        img: 'https://cdn-icons-png.freepik.com/512/145/145894.png',
-                        name: 'Karel Salgado'
-                    },
-                    value: 3,
-                    body: "Nullam sed nisl ut nisl congue eleifend efficitur a tellus. Suspendisse interdum rhoncus luctus. Morbi vel elit sodales, luctus massa et, condimentum velit. Proin eu lobortis velit, rhoncus placerat velit. Vivamus risus odio, finibus vitae nunc sit amet, elementum sodales quam. Curabitur aliquet non sem at malesuada. Nullam commodo mi sit amet risus vestibulum varius. Donec purus velit, eleifend eu congue non, mattis finibus est. Maecenas sit amet sem arcu. Praesent at commodo mi. Proin in felis ac eros posuere dignissim at a urna."
-                },
-                {
-                    user: {
-                        img: 'https://cdn-icons-png.freepik.com/512/145/145894.png',
-                        name: 'Karel Salgado'
-                    },
-                    value: 3,
-                    body: "asomre que pinshi carro tan brgas, psss es audi nmms que riko"
-                },
-                {
-                    user: {
-                        img: 'https://cdn-icons-png.freepik.com/512/145/145894.png',
-                        name: 'Karel Salgado'
-                    },
-                    value: 3,
-                    body: "asomre que pinshi carro tan brgas, psss es audi nmms que riko"
-                },
-            ]
-            ,
+            rate: 0.0,
+            comments:[],
+            comment: {
+                value: 0,
+                comment: '',
+                id_auto: 0,
+                id_user: 0
+            },
             dialog: false,
             imgIndex: 0,
-            vehicles: [
-                {
-                    id: 1,
-                    model: 'New SM5',
-                    brand: 'Toyota',
-                    price: '$79,999.99',
-                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
-                },
-                {
-                    id: 2,
-                    model: 'New SM5',
-                    brand: 'Toyota',
-                    price: '$79,999.99',
-                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
-                },
-                {
-                    id: 3,
-                    model: 'New SM5',
-                    brand: 'Toyota',
-                    price: '$79,999.99',
-                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
-                },
-                {
-                    id: 4,
-                    model: 'New SM5',
-                    brand: 'Toyota',
-                    price: '$79,999.99',
-                    description: 'New SM5 nos da una probadita de su nuevo lanzamiento en México...',
-                    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg'
-                },
-            ]
+            vehicles: [],
+            commentLoading: false,
         }
     },
     methods: {
@@ -372,14 +324,58 @@ export default {
             this.$router.push({name: 'details_car', params: {id: vehicleId}}).then(() => {
                 window.location.reload();
             });
+        },
+        getMeanRate() {            
+            this.comments.forEach(comment => {
+                this.rate += comment.value;
+            });
+            this.rate = Number.parseFloat(this.rate / this.comments.length).toFixed(1);
+        },
+        async getCar() {
+            const id = this.$route.params.id;
+            const response = await service.getCar(id);
+            this.exampleVehicle = response.data[0];
+        },
+        async getComments() {
+            const id = this.$route.params.id;
+            const response = await service.getComments(id);
+            this.comments = response.data;
+            if(this.comments.length > 0) {
+                this.getMeanRate();
+            }
+        },
+        async getAllCars() {
+            const id = this.$route.params.id;
+            const response = await service.getAllCars();
+            this.vehicles = response.data.filter((vehicle) => vehicle.id_auto + '' !== id);
+        },
+        rateCar() {
+            if (this.validForm) {
+                this.commentLoading = true;                
+                const payload = {
+                value: '' + this.comment.value,
+                comment: this.comment.comment,
+                id_auto: this.$route.params.id
+                }
+                service.rate(payload)
+                .then(() => {
+                    this.commentLoading = false;
+                    window.location.reload();
+                });                
+            } else {
+                return;
+            }
+        },
+        async getUser() {
+            this.user = await service.getUser();
         }
     },
     computed: {
         limitedItems() {
-            return this.images.slice(0,4);
+            return this.exampleVehicle.images.slice(0,4);
         },
         outOfRangeImages() {
-            return this.images.length - 4;
+            return this.exampleVehicle.images.length - 4;
         },
         pageCount() {
             return Math.ceil(this.comments.length / this.itemsPerPage);
@@ -389,6 +385,27 @@ export default {
             const end = start + this.itemsPerPage;
             return this.comments.slice(start, end);
         },
+        commentRules() {
+            return[
+                value => !!value || 'El comentario debe incluir una opinión.',
+                value => /^[a-zA-Z0-9\s.,;:?!¡¿áéíóúÁÉÍÓÚñÑ]+$/.test(value) || 'El comentario no admite caracteres especiales.',
+                value => value.trim() !== '' || '🤨🤨🤨'
+            ];
+        },
+        validForm() {
+            return (
+                this.comment.comment !== '' &&
+                this.comment.comment.trim() !== '' &&
+                /^[a-zA-Z0-9\s.,;:?!¡¿áéíóúÁÉÍÓÚñÑ]+$/.test(this.comment.comment) &&
+                this.comment.value > 0
+            );
+        }
+    },
+    mounted() {
+        this.getCar();
+        this.getComments();
+        this.getAllCars();
+        this.getUser();
     }
 }
 </script>
@@ -480,5 +497,10 @@ export default {
 .card-vehicle {
     width: 30%;
     margin: 0 1em 0 1em;
+}
+
+.default-comment-card {
+    border: 1px solid #DCDCDC;
+    border-radius: .5em;
 }
 </style>
