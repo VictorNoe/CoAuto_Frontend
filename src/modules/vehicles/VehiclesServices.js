@@ -18,11 +18,12 @@ const updateCar = async (dataCar) => {
         const response = await apiGateway.doPut(API_URL_UPDATECAR, dataCar);
         return response.data;
     } catch (error) {
-        console.error('Error agregando car', error);
+        console.error('Error actualizando car', error);
         return error;
     }
 };
-const getAllCars = async()=>{
+
+const getAllCars = async () => {
     try {
         const response = await apiGateway.doGet(API_URL_GETCAR);
         return response.data;
@@ -32,5 +33,5 @@ const getAllCars = async()=>{
 };
 
 export default {
-    addCar, getAllCars,updateCar
+    addCar, getAllCars, updateCar
 }
