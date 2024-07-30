@@ -231,7 +231,7 @@
                 <v-card-subtitle>{{ vehicle.brand }}</v-card-subtitle>
                 <v-card-text>
                     <p class="font-weight-bold p-color">{{ vehicle.price }}</p>
-                    <p>{{ vehicle.description }}</p>
+                    <p>{{ vehicle.description.slice(0,20) }}...3</p>
                 </v-card-text>
             </v-card>
         </div>
