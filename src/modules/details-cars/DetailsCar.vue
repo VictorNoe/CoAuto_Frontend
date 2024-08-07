@@ -188,6 +188,7 @@
                     </v-col>
                     <v-col cols="12" md="3" class="align-content-center">
                         <v-rating
+                            v-if="own_comment_index === -1"
                             color="yellow darken-3"
                             background-color="grey darken-1"
                             empty-icon="$ratingFull"
@@ -196,6 +197,17 @@
                             size="21"
                             v-model="comment.value"
                         ></v-rating>
+                        <v-rating
+                        v-if="own_comment_index !== -1"
+                        color="yellow darken-3"
+                        background-color="grey darken-1"
+                        empty-icon="$ratingFull"
+                        hover
+                        length="5"
+                        size="21"
+                        readonly
+                        v-model="comment.value"
+                    ></v-rating>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -206,7 +218,7 @@
                             label="Comentario"
                             auto-grow
                             outlined
-                            :disabled="commentLoading"
+                            :disabled="commentLoading || own_comment_index != -1"
                         >
                         </v-textarea>
                     </v-col>
@@ -215,7 +227,7 @@
                     <v-btn
                         color="primary"
                         class="ms-auto"
-                        :disabled="!validForm"
+                        :disabled="!validForm || own_comment_index !== -1"
                         @click="rateCar"
                         :loading="commentLoading"
                     >Comentar</v-btn>
@@ -276,7 +288,8 @@ export default {
             },
             user: {
                 profileImage: null,
-                name: ''
+                name: '',
+                email:  ''
             },
             page: 1,
             itemsPerPage: 3,
@@ -295,6 +308,7 @@ export default {
             carLoading: false,
             commentsLoading: false,
             allCarsLoading: false,
+            own_comment_index: -1,
         }
     },
     methods: {
@@ -308,6 +322,12 @@ export default {
                 this.rate += comment.value;
             });
             this.rate = Number.parseFloat(this.rate / this.comments.length).toFixed(1);
+        },
+        getOwnComment() {
+            this.own_comment_index = this.comments.map(c => c.email).indexOf(this.user.email);
+            if (this.own_comment_index != -1) {
+                this.comment = this.comments[this.own_comment_index];
+            }
         },
         async getCar() {
             this.carLoading = true;
@@ -329,6 +349,7 @@ export default {
                 this.comments = response.data;
                 if (this.comments.length > 0) {
                     this.getMeanRate();
+                    this.getOwnComment();
                 }
             } catch (error) {
                 console.error(error);
@@ -367,6 +388,7 @@ export default {
         async getUser() {
             try {
                 this.user = await service.getUser();
+                console.log(this.user);
             } catch (error) {
                 console.error(error);
             }

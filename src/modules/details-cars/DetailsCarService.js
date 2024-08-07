@@ -48,7 +48,8 @@ const getUser = async() => {
         const data = response.data.userInfo;
         return {
             profileImage: data.profileImage,
-            name: `${data.nameUser} ${data.lastname}`
+            name: `${data.nameUser} ${data.lastname}`,
+            email: data.email,
         };
     } catch(err) {
         return err;
