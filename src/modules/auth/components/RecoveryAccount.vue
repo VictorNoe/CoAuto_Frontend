@@ -1,6 +1,6 @@
 <template>
     <v-row justify="center">
-        <v-dialog v-model="localDialog" persistent max-width="400" @update:model-value="handleDialogClose">
+        <v-dialog v-model="localDialog" max-width="400" @click:outside="closeDisplay">
             <v-card class="py-8 px-6 text-center mx-auto " elevation="12" max-width="400" width="100%">
                 <h3 class="text-h6 mb-4">Recuperar cuenta</h3>
 
@@ -17,8 +17,11 @@
                 ></v-text-field>
 
                 <v-btn class="my-1" color="primary" height="40" variant="flat" width="70%" :loading="validating"
-                    :disabled="!isEmailValid" @click="onClick">Verificar</v-btn>
-
+                    :disabled="!isEmailValid || timerVisible" @click="onClick">Verificar</v-btn>
+                
+                <div v-if="timerVisible" class="text-caption">
+                    Puedes solicitar tu cambio de contraseña en <a>{{ formatTime(timer) }}</a>
+                </div>
                 <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="2000" top>
                     {{ text }}
                 </v-snackbar>
@@ -28,6 +31,8 @@
 </template>
 
 <script>
+import AuthServices from '../AuthServices';
+const { recoveryAccount } = AuthServices;
 export default {
     props: {
         dialog: {
@@ -43,6 +48,8 @@ export default {
             text: '',
             snackbar: false,
             snackbarColor: 'warning',
+            timerVisible: false,
+            timer: 180,
             rulesEmail: [
                 value => !!value || 'Requiere llenar campo.',
                 value => (value || '').length <= 50 || '20 caracteres maximo.',
@@ -60,34 +67,76 @@ export default {
         }
     },
     watch: {
-        dialog(newVal) {
+        dialog(newVal) { 
             this.localDialog = newVal
+        }
+    },
+    mounted() {
+        const savedTimer = localStorage.getItem('recoveryAccountTimer');
+        if(savedTimer) {
+            const timer = parseInt(savedTimer);
+            if (!isNaN(timer) && timer > 0) {
+                this.timer = timer;
+                this.startTimer();
+            }
         }
     },
     methods: {
         handleDialogClose() {
-            this.$emit('update:dialog', this.localDialog);
+            this.$emit('emailConfim', this.email)
             if (!this.localDialog) {
                 this.$emit('close-dialog', false);
             }
+            this.email = '';
         },
         closeDialog() {
             this.localDialog = false;
             this.handleDialogClose();
         },
-        onClick() {
-            this.validating = true
-
-            setTimeout(() => {
-                this.validating = false
-                if (this.email === '111111') {
-                    this.closeDialog()
-                }
-                this.otp = ''
-                this.text = `Codigo invalido`
-                this.snackbar = true
-            }, 2000)
+        closeDisplay() {
+            this.email = '';
+            this.localDialog = false;
+            if (!this.localDialog) {
+                this.$emit('close-dialog', false);
+            }
         },
+        async onClick() {
+            try {
+                this.validating = true
+                const data = await recoveryAccount(this.email);
+                this.text = data.message
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.closeDialog()
+                this.startTimer();
+                this.email = ''
+                this.snackbar = true
+                this.validating = false
+            }
+        },
+        startTimer() {
+            this.timerVisible = true;
+            this.buttonDisabled = true;
+
+            const intervalId = setInterval(() => {
+                if (this.timer > 0) {
+                    this.timer--;
+                    localStorage.setItem('recoveryAccountTimer', this.timer.toString());
+                } else {
+                    clearInterval(intervalId);
+                    this.timerVisible = false;
+                    this.buttonDisabled = false;
+                    this.timer = 60; 
+                    localStorage.removeItem('recoveryAccountTimer');
+                }
+            }, 1000);
+        },
+        formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
     }
 }
 </script>

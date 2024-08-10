@@ -33,7 +33,7 @@ client.interceptors.response.use(
         if (!error.response) {
             Alert.Toast('error',"El servidor no respondio")
             store.dispatch('logout');
-            router.push({ name: 'login' });
+            router.push({ path: '/' });
             return Promise.reject(error)
         }
         if (error.response.status) {
@@ -44,7 +44,7 @@ client.interceptors.response.use(
                 case 401:
                     Alert.Toast("error",'Sin sesión')
                     store.dispatch('logout');
-                    router.push({ name: 'login' });
+                    router.push({ path: '/' });
                     break;
                 case 403:
                     Alert.Toast("error","Acceso denegado")

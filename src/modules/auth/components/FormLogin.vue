@@ -54,12 +54,18 @@
                 <RecoveryAccount
                   :dialog.sync="dialog"
                   @close-dialog="handleDialogClose"
+                  @emailConfim="emailConfim"
                 />
                 <ConfirmAccount
                   :dialog.sync="dialogConfirma"
                   @close-dialog="confirmAccountClone"
                   :email="email"
                   :password="password"
+                />
+                <ChangePassword
+                  :dialog.sync="dialogPassword"
+                  @close-dialog="confirmPasswordClose"
+                  :email="emailReovery"
                 />
               </v-row>
             </v-container>
@@ -72,15 +78,18 @@ import Alert from "../../../utils/Alert"
 const { login } = AuthServices;
 import ConfirmAccount from "../../../components/ConfirmAccount.vue";
 import RecoveryAccount from "./RecoveryAccount.vue";
+import ChangePassword from "./ChangePassword.vue";
 export default {
   data() {
     return {
       show1: false,
       loading: false,
       email: '',
+      emailReovery: '',
       password: '',
       dialog: false,
       dialogConfirma: false,
+      dialogPassword: false,
       checkbox: false,
       rulesEmail: [
         value => !!value || 'Requiere llenar campo.',
@@ -132,7 +141,10 @@ export default {
     recoveryAccount() {
       this.dialog = true;
     },
-    handleDialogClose(value) {
+    handleDialogClose(value) {    
+      if(this.emailReovery){
+        this.confirmPassword()
+      }
       this.dialog = value;
     },
     ConfirmAccount() {
@@ -140,11 +152,22 @@ export default {
     },
     confirmAccountClone(value) {
       this.dialogConfirma = value;
+    },
+    confirmPassword() {
+      this.dialogPassword = true;
+    },
+    confirmPasswordClose(value) {
+      this.emailReovery = ''
+      this.dialogPassword = value
+    },
+    emailConfim(value) {
+      this.emailReovery = value
     }
   },
   components: {
     RecoveryAccount,
-    ConfirmAccount
+    ConfirmAccount,
+    ChangePassword
   }
 }
 </script>
