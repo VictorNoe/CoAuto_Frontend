@@ -123,6 +123,7 @@ export default {
           Alert.Toast('error', title)
         } else {
           localStorage.setItem('token', data.response.IdToken);
+          localStorage.setItem('accessToken', data.response.AccessToken)
           this.$store.dispatch('login', data.response.IdToken);
           if (data.role == 'ClientUserGroup') {
             this.$router.push({ name: 'home' });
