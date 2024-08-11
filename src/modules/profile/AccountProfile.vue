@@ -14,7 +14,7 @@
             <v-col cols="12" md="8" class="text-start">
               <div
                 class="text-h4 mb--1 font-weight-bold"
-                v-text="!state ? `${firstName} ${lastName}` : 'Cargando...'"
+                v-text="!state ? `${validateFirsName} ${validateLastName}` : 'Cargando...'"
               ></div>
               <div
                 class="text-h6 mb--1 text--secondary"
@@ -37,13 +37,13 @@
               ></div>
             </v-col>
             <v-col cols="12" xl="5" lg="5" md="6" sm="6" xs="12">
-              <v-text-field outlined required dense label="Nombre(s)" :loading="state" :disabled="state" v-model="firstName"></v-text-field>
+              <v-text-field outlined required dense label="Nombre(s)" :rules="rulesName" :loading="state || loadingBtn" :disabled="state || stateRole || loadingBtn" v-model="firstName"></v-text-field>
             </v-col>
             <v-col cols="12" xl="5" lg="5" md="6" sm="6" xs="12">
-              <v-text-field required outlined dense label="Apellido(s)" :loading="state" :disabled="state" v-model="lastName"></v-text-field>
+              <v-text-field required outlined dense label="Apellido(s)" :rules="rulesLastName" :loading="state || loadingBtn" :disabled="state || stateRole || loadingBtn" v-model="lastName"></v-text-field>
             </v-col>
             <v-col cols="12" xl="2" lg="2" md="12" sm="12" xs="12" class="text-md-right text-center">
-              <v-btn color="primary" @click="saveName" :disabled="state" block>Editar</v-btn>
+              <v-btn color="primary" @click="updateInfo" :disabled="state || !validateName" :loading="loadingBtn" block>Editar</v-btn>
             </v-col>
           </v-row>
 
@@ -90,34 +90,75 @@
 import ProfileServices from './ProfileServices';
 import store from '@/utils/store';
 import ChangePassword from './components/ChangePassword.vue';
-const {getInfo} = ProfileServices;
+import Alert from '@/utils/Alert';
+const {getInfo, updateInfo} = ProfileServices;
 export default {
   data() {
     return {
       id_user: 0,
       firstName: '',
       lastName: '',
+      validateFirsName: '',
+      validateLastName: '',
+      stateRole: false,
+      loadingBtn: false,
       email: 'example@gamil.com',
       password: '********',
       state: true,
       dialog: false,
+      rulesName: [
+        value => !!value || 'Requiere llenar campo.',
+        value => (value || '').length <= 30 || '30 caracteres maximo.',
+        value => (value || '').length >= 3 || '3 caracteres minimo.',
+        value => !/\d/.test(value) || 'No se permiten números en el nombre.',
+        value => {
+          const pattern = /^[a-zA-z ]+$/
+          return pattern.test(value) || 'Nombre(s) invalido'
+        },
+      ],
+      rulesLastName: [
+        value => !!value || 'Requiere llenar campo.',
+        value => (value || '').length <= 30 || '30 caracteres maximo.',
+        value => (value || '').length >= 3 || '3 caracteres minimo.',
+        value => !/\d/.test(value) || 'No se permiten números en el nombre.',
+        value => {
+          const pattern = /^[a-zA-z ]+$/
+          return pattern.test(value) || 'Apellido(s) invalido'
+        },
+      ],
     };
   },
   components: {
     ChangePassword
   },
+  computed: {
+    validateName() {
+      return (
+        (this.firstName !== this.validateFirsName || this.lastName !== this.validateLastName) &&
+        this.rulesName.every(rule => typeof rule === 'function' ? rule(this.firstName) === true : rule) &&
+        this.rulesLastName.every(rule => typeof rule === 'function' ? rule(this.lastName) === true : rule) 
+      )
+    },
+  },
   created() {
     const isAuthenticated = store.getters.isAuthenticated;
     if (isAuthenticated) {
       this.getInfo()
+      const role = store.getters.userRole;
+      if (role == ['AdminUserGroup']) {
+        this.stateRole = true;
+      }
     }
   },
   methods: {
     async getInfo() {
       try {
         const data = await getInfo();
+        this.id_user = data.id_user;
         this.firstName = data.nameUser;
         this.lastName = data.lastname;
+        this.validateFirsName = data.nameUser;
+        this.validateLastName = data.lastname;
         this.email = data.email;
       } catch (error) {
         console.error('Error agregando car', error);
@@ -125,11 +166,21 @@ export default {
         this.state = false;
       }
     },
-    updatePhoto() {
-
-    },
-    saveName() {
-
+    async updateInfo() {
+      try {
+        this.loadingBtn = true;
+        const data = await updateInfo(this.id_user, this.firstName, this.lastName); 
+        if (data.data.statusCode === 200) {
+          Alert.Toast('success', 'Se actualizo el nombre')
+          await this.getInfo();
+        } else {
+          Alert.Toast('error', 'No se actualuzo el nombre')
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        this.loadingBtn = false;
+      }
     },
     openChangePassword() {
       this.dialog = true;

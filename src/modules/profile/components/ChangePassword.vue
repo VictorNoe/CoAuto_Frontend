@@ -9,11 +9,11 @@
                 </div>
 
                 <div class="text-subtitle-1 text-medium-emphasis text-start">Contraseña Actual</div>
-                <v-text-field v-model="oldPassword" :rules="rulesOldPassword" type="password" placeholder="•••••••••••" dense
+                <v-text-field ref="oldPasswordField" v-model="oldPassword" :rules="rulesOldPassword" type="password" placeholder="•••••••••••" dense
                     outlined required></v-text-field>
 
                 <div class="text-subtitle-1 text-medium-emphasis text-start">Nueva contraseña</div>
-                <v-text-field v-model="newPassword" :rules="rulesNewPassword" type="password"
+                <v-text-field ref="newPasswordField" v-model="newPassword" :rules="rulesNewPassword" type="password"
                     placeholder="•••••••••••" dense outlined required></v-text-field>
 
                 <v-btn class="my-1" color="primary" height="40" variant="flat" width="70%" :loading="loading"
@@ -99,6 +99,8 @@ export default {
         },
         closeDialogBottom() {
             this.startTimer();
+            this.$refs.oldPasswordField.reset();
+            this.$refs.newPasswordField.reset();
             this.localDialog = false;
             if (!this.localDialog) {
                 this.$emit('close-dialog', false);
@@ -110,9 +112,8 @@ export default {
                 this.validating = true
                 const result = await changePasword(this.oldPassword, this.newPassword);
                 console.log(result);
-                
-                if (result.data.statusCode === 200) {
-                    Alert.Toast('success', result.data.response.message)
+                if (result?.data.statusCode === 200) {
+                    Alert.Toast('success', 'Se actualizo la contraseña')
                     this.closeDialogBottom();
                 } else {
                     Alert.Toast('error', 'No se ha podido cambiar la contraseña')
@@ -120,8 +121,8 @@ export default {
             } catch (err) {
                 Alert.Toast('error', 'No se ha podido cambiar la contraseña')
             } finally {
-                this.loading = false
-                this.validating = false
+                this.loading = false;
+                this.validating = false;
             }
         },
         startTimer() {
