@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="localDialog" max-width="600">
+  <v-dialog v-model="localDialog" max-width="600" @click:outside="close">
     <v-card>
       <v-card-title>
         <span class="headline">Agregar Auto</span>
@@ -241,9 +241,12 @@ export default {
   },
   methods: {
     close() {
-      this.localDialog = false;
       this.resetForm();
-    },
+            this.localDialog = false;
+            if (!this.localDialog) {
+                this.$emit('close-dialog', false);
+            }
+        },
     resetForm() {
       this.vehicle = {
         model: '',
