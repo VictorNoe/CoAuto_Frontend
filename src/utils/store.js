@@ -43,6 +43,7 @@ export default new Vuex.Store({
             state.user.role = null;
             state.user.token = null;
             localStorage.removeItem("token");
+            localStorage.removeItem("accessToken");
         }
     },
     actions: {
