@@ -2,7 +2,7 @@ import apiGateway from '../../utils/Http.gateway';
 const API_URL_ADDCAR = 'https://fohggt0wwd.execute-api.us-east-1.amazonaws.com/Prod/insert_data';
 const API_URL_GETCAR = 'https://fohggt0wwd.execute-api.us-east-1.amazonaws.com/Prod/get_data';
 const API_URL_UPDATECAR = 'https://fohggt0wwd.execute-api.us-east-1.amazonaws.com/Prod/update_data';
-
+const API_UTL_DELETE = 'https://fohggt0wwd.execute-api.us-east-1.amazonaws.com/Prod/delete_data'
 const addCar = async (dataCar) => {
     try {
         const response = await apiGateway.doPost(API_URL_ADDCAR, dataCar);
@@ -31,7 +31,15 @@ const getAllCars = async () => {
         return error;
     }
 };
-
+const deleteCar = async (data)=>{
+    try {
+        const response = await apiGateway.doDelete(API_UTL_DELETE, { id_auto: data.id_auto, id_status: data.id_status });
+        return response.data;
+    } catch (error) {
+        console.error('Error eliminando car', error);
+        return error;
+    }
+ }
 export default {
-    addCar, getAllCars, updateCar
+    addCar, getAllCars, updateCar,deleteCar
 }
