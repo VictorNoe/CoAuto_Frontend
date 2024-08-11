@@ -16,7 +16,7 @@
     <v-row>
       <v-col>
         <v-progress-linear v-if="loading" indeterminate color="blue"></v-progress-linear>
-        <div v-if="!loading && filteredVehicles.length === 0" class="col-12">
+        <div v-if="!loading && paginatedVehicles.length === 0" class="col-12">
           <p>No hay registros disponibles.</p>
         </div>
         <v-simple-table v-else class="elevation-2">
@@ -35,7 +35,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in filteredVehicles" :key="item.id_auto">
+              <tr v-for="item in paginatedVehicles" :key="item.id_auto">
                 <td>{{ item.id_auto }}</td>
                 <td><v-avatar size="36"><img :src="item.images[0]" :alt="item.model" /></v-avatar></td>
                 <td>{{ item.model }}</td>
@@ -74,6 +74,12 @@
             </tbody>
           </template>
         </v-simple-table>
+        <v-pagination
+          v-model="currentPage"
+          :length="pageCount"
+          :total-visible="7"
+          @input="paginate"
+        ></v-pagination>
       </v-col>
     </v-row>
     <EditVehicle :dialog.sync="editDialog"  @close-dialog-edit="handleDialogCloseEdit" :vehicleData="selectedVehicle" @update:dialog="editDialog = $event" @car-updated="handleCarUpdated" />
@@ -109,7 +115,19 @@ export default {
       editDialog: false,
       selectedVehicle: {},
       loading: false,
+      itemsPerPage: 5, 
+      currentPage: 1, 
     };
+  },
+  computed: {
+    paginatedVehicles() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredVehicles.slice(start, end);
+    },
+    pageCount() {
+      return Math.ceil(this.filteredVehicles.length / this.itemsPerPage);
+    }
   },
   watch: {
     searchText: 'filterVehicles',
@@ -142,7 +160,7 @@ export default {
           this.filterVehicles();
         }
       } catch (error) {
-        console.error('Error fetching cars:', error);
+        this.loading = false;
       } finally {
         this.loading = false;
       }
@@ -170,6 +188,8 @@ export default {
         }
       });
     },
+    paginate() {
+    },
     getColor(status) {
       return status === 1 ? 'green' : 'red';
     },
@@ -180,30 +200,27 @@ export default {
       this.selectedVehicle = { ...vehicle };
       this.editDialog = true;
     },
-   async deleteVehicle(item) {
+    async deleteVehicle(item) {
       try{
         this.loading = true;
         const update ={
           id_auto: item.id_auto,
-        id_status: item.status === 1? 4 : 3,
-      }
-      const res = await VehiclesServices.deleteCar(update);
-      console.log(res)
-      if(res&&res.statusCode === 200){
-        await this.getCars();
-      }
+          id_status: item.status === 1 ? 4 : 3,
+        }
+        const res = await VehiclesServices.deleteCar(update);
+        if(res && res.statusCode === 200){
+          await this.getCars();
+        }
       }catch(error){
         this.loading = false;
-          return false;
+        return false;
       }finally{
         this.loading = false;
       }
-    
     }
   }
 };
 </script>
-
 
 <style scoped>
 h1 {
