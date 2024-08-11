@@ -72,11 +72,15 @@
                 style="cursor:pointer;"
                 class="text-subtitle-1 font-weight-bold text-decoration-none text-decoration-underline"
                 v-text="'Editar'"
-                @click="editEmail"
+                @click="openChangePassword"
               ></div>
             </v-col>
           </v-row>
         </v-card>
+        <ChangePassword
+          :dialog.sync="dialog"
+          @close-dialog="closeChangePassword"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -85,6 +89,7 @@
 <script>
 import ProfileServices from './ProfileServices';
 import store from '@/utils/store';
+import ChangePassword from './components/ChangePassword.vue';
 const {getInfo} = ProfileServices;
 export default {
   data() {
@@ -92,10 +97,14 @@ export default {
       id_user: 0,
       firstName: '',
       lastName: '',
-      email: 'karel@gmail.com',
+      email: 'example@gamil.com',
       password: '********',
-      state: true
+      state: true,
+      dialog: false,
     };
+  },
+  components: {
+    ChangePassword
   },
   created() {
     const isAuthenticated = store.getters.isAuthenticated;
@@ -122,10 +131,12 @@ export default {
     saveName() {
 
     },
-    editEmail() {
-      console.log("Pasew");
-      
-    }
+    openChangePassword() {
+      this.dialog = true;
+    },
+    closeChangePassword(value) {
+      this.dialog = value;
+    },
   }
 };
 </script>
