@@ -11,7 +11,7 @@
       <v-col cols="12" md="2">
         <v-btn class="mt-2" elevation="2" @click="dialog = true">Agregar auto</v-btn>
       </v-col>
-      <AddVehicle :dialog.sync="dialog" @update:dialog="dialog = $event" @car-added="handleCarAdded" />
+      <AddVehicle :dialog.sync="dialog" @close-dialog="handleDialogClose" @update:dialog="dialog = $event" @car-added="handleCarAdded" />
     </v-row>
     <v-row>
       <v-col>
@@ -76,7 +76,7 @@
         </v-simple-table>
       </v-col>
     </v-row>
-    <EditVehicle :dialog.sync="editDialog" :vehicleData="selectedVehicle" @update:dialog="editDialog = $event" @car-updated="handleCarUpdated" />
+    <EditVehicle :dialog.sync="editDialog"  @close-dialog-edit="handleDialogCloseEdit" :vehicleData="selectedVehicle" @update:dialog="editDialog = $event" @car-updated="handleCarUpdated" />
   </v-container>
 </template>
 
@@ -118,6 +118,12 @@ export default {
     await this.getCars();
   },
   methods: {
+    handleDialogClose(value) {    
+      this.dialog = value;
+    },
+    handleDialogCloseEdit(value) {    
+      this.editDialog = value;
+    },
     async handleCarAdded(value) {
       await this.getCars();
       this.dialog = value;
