@@ -84,6 +84,7 @@
 import AddVehicle from './components/AddVehicle.vue';
 import VehicleServices from './VehiclesServices';
 import EditVehicle from './components/EditVehicle.vue';
+import VehiclesServices from './VehiclesServices';
 
 export default {
   components: {
@@ -179,7 +180,25 @@ export default {
       this.selectedVehicle = { ...vehicle };
       this.editDialog = true;
     },
-    deleteVehicle() {
+   async deleteVehicle(item) {
+      try{
+        this.loading = true;
+        const update ={
+          id_auto: item.id_auto,
+        id_status: item.status === 1? 4 : 3,
+      }
+      const res = await VehiclesServices.deleteCar(update);
+      console.log(res)
+      if(res&&res.statusCode === 200){
+        await this.getCars();
+      }
+      }catch(error){
+        this.loading = false;
+          return false;
+      }finally{
+        this.loading = false;
+      }
+    
     }
   }
 };
