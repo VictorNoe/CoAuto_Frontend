@@ -106,7 +106,7 @@
 <script>
 import Alerts from '../../../utils/Alert';
 import VehiclesServices from '../VehiclesServices';
-
+import Aws from '../../../utils/aws-configure';
 export default {
   props: {
     dialog: {
@@ -312,36 +312,28 @@ export default {
       }
     },
     async uploadImages() {
-      const uploadedUrls = [];
-      const uploadedImages = new Set();
-      for (let i = 0; i < this.images.length; i++) {
-        const image = this.images[i];
-        if (image && !this.imageSizeError[i] && !this.duplicateImageError[i]) {
-          const formData = new FormData();
-          formData.append('upload_preset', 'buffet');
-          formData.append('file', image);
-          formData.append('api_key', '578366943965652');
-          formData.append('folder', 'packages');
+    const uploadedUrls = [];
+    for (let i = 0; i < this.images.length; i++) {
+      const image = this.images[i];
+      if (image && !this.imageSizeError[i] && !this.duplicateImageError[i]) {
+        const params = {
+          Bucket: process.env.VUE_APP_S3_BUCKET_NAME,
+          Key: `vehicles/${Date.now()}_${image.name}`, 
+          Body: image,
+          ContentType: image.type 
+        };
 
-          const response = await fetch('https://api.cloudinary.com/v1_1/iotimages/upload', {
-            method: 'POST',
-            body: formData
-          });
-
-          if (!response.ok) {
-            throw new Error('Error al subir imagen a Cloudinary');
-          }
-
-          const responseData = await response.json();
-          if (!uploadedImages.has(responseData.secure_url)) {
-            uploadedUrls.push(responseData.secure_url);
-            uploadedImages.add(responseData.secure_url);
-          }
+        try {
+          const data = await Aws.s3.upload(params).promise();
+          uploadedUrls.push(data.Location); 
+        } catch (err) {
+          throw new Error("No se pudieron cargar las imagenes");
+          
         }
       }
-
-      return uploadedUrls;
-    },
+    }
+    return uploadedUrls;
+  },
   }
 };
 </script>
