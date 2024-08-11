@@ -76,7 +76,11 @@ export default {
     doPut: function (endPoint, object, config) {
         return client.put(endPoint, object, config || {});
     },
-    doDelete: function (endPoint) {
-        return client.delete(endPoint);
-    },
+    doDelete: function (endPoint, object, config) {
+        return client.delete(endPoint, {
+            ...config,
+            data: object
+        });
+    }
+    
 };
