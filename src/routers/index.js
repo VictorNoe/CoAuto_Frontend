@@ -104,6 +104,7 @@ const routes = [
                 path: '/rates_vehicles',
                 name: 'ratesVehicles',
                 component: BlookRate,
+                props: true,
                 meta: {
                     requiresAuth: true,
                     roles: ['AdminUserGroup'],

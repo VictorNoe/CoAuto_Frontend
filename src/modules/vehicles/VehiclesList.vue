@@ -63,7 +63,7 @@
                         </v-list-item>
                         <v-list-item>
                           <v-list-item-action>
-                            <v-btn text x-small><v-icon left dark>mdi-message-outline</v-icon>Comentarios</v-btn>
+                            <v-btn text x-small @click="getComments(item.id_auto)"><v-icon left dark>mdi-message-outline</v-icon>Comentarios</v-btn>
                           </v-list-item-action>
                         </v-list-item>
                       </v-list>
@@ -217,6 +217,13 @@ export default {
       }finally{
         this.loading = false;
       }
+    },
+    getComments(id) {
+      this.$router.push({
+        name: 'ratesVehicles',
+        params: { id: id }
+      })
+      
     }
   }
 };
