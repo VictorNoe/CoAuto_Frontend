@@ -1,7 +1,8 @@
 import apiGateway from '../../utils/Http.gateway';
-const API_URL_GETUSER = 'https://c2vprhsq9l.execute-api.us-east-1.amazonaws.com/Prod/get_data';
+const API_URL_GETUSER = 'https://focsahce29.execute-api.us-east-1.amazonaws.com/Prod/get_data';
 const API_URL_ADDUSER = '';
-const API_URL_UPDATEUSER = 'https://c2vprhsq9l.execute-api.us-east-1.amazonaws.com/Prod/update_data';
+const API_URL_UPDATEUSER = 'https://focsahce29.execute-api.us-east-1.amazonaws.com/Prod/update_data';
+const API_URL_DELETEUSER = 'https://focsahce29.execute-api.us-east-1.amazonaws.com/Prod/delete_data';
 
 const getAllUsers = async () => {
     try {
