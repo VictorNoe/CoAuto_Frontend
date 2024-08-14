@@ -110,7 +110,7 @@ export default {
   methods: {
     async info() {
       try {
-        const response = await apiGateway.doPost('https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/get_user');
+        const response = await apiGateway.doPost('https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/get_user');
         const data = response.data.userInfo;  
         this.user.fullName = data.nameUser;
         this.user.email = data.email;
