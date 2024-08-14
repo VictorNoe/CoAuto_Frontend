@@ -1,7 +1,7 @@
 import apiGateway from '../../utils/Http.gateway';
-const API_URL_GET_RATE = 'https://i6dyqony58.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/?id_auto=';
-const API_URL_DELETE_RATE = 'https://i6dyqony58.execute-api.us-east-1.amazonaws.com/Prod/delete_data';
-const API_URL_GET_AUTO = 'https://fohggt0wwd.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/?id_auto=';
+const API_URL_GET_RATE = 'https://ut6t5bzpua.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/?id_auto=';
+const API_URL_DELETE_RATE = 'https://ut6t5bzpua.execute-api.us-east-1.amazonaws.com/Prod/delete_data';
+const API_URL_GET_AUTO = 'https://syr3x8vt0g.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/?id_auto=';
 
 const getByIdRate = async (id) => {
     try {
