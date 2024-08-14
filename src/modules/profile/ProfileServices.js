@@ -1,8 +1,8 @@
 import apiGateway from '../../utils/Http.gateway';
 
-const API_URL_GET_INFO = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/get_user';
-const API_URL_CHANGE_PASSWORD = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/change_password';
-const API_URL_UPDATE_INFO = 'https://c2vprhsq9l.execute-api.us-east-1.amazonaws.com/Prod/update_data';
+const API_URL_GET_INFO = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/get_user';
+const API_URL_CHANGE_PASSWORD = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/change_password';
+const API_URL_UPDATE_INFO = 'https://focsahce29.execute-api.us-east-1.amazonaws.com/Prod/update_data';
 
 const getInfo = async () => {
     try {
