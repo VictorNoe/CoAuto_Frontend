@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL_LOGIN = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/login';
-const API_URL_RECOVERY_ACCOUNT = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/forgot_password';
-const API_URL_RECOVERY_CONFIRM = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/confirm_forgot_password';
-const API_URL_CONFIRM_ACCOUNT = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/confirm_sign_up';
-const API_URL_RECOVERY_CODE = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/resend_confirmation_code'
+const API_URL_LOGIN = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/login';
+const API_URL_RECOVERY_ACCOUNT = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/forgot_password';
+const API_URL_RECOVERY_CONFIRM = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/confirm_forgot_password';
+const API_URL_CONFIRM_ACCOUNT = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/confirm_sign_up';
+const API_URL_RECOVERY_CODE = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/resend_confirmation_code'
 
 const login = async (email, password) => {
     try {
