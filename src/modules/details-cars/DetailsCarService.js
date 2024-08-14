@@ -1,10 +1,10 @@
 import apiGateway from '../../utils/Http.gateway';
 
-const API_URL_GETCAR = 'https://fohggt0wwd.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/';
-const API_URL_GETCOMMENTS = 'https://i6dyqony58.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/';
-const API_URL_GETALLCARS = 'https://fohggt0wwd.execute-api.us-east-1.amazonaws.com/Prod/get_data';
-const API_URL_CREATERATE = 'https://i6dyqony58.execute-api.us-east-1.amazonaws.com/Prod/insert_data';
-const API_URL_GETUSERINFO = 'https://uz8a3h8uc0.execute-api.us-east-1.amazonaws.com/Prod/get_user';
+const API_URL_GETCAR = 'https://syr3x8vt0g.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/';
+const API_URL_GETCOMMENTS = 'https://ut6t5bzpua.execute-api.us-east-1.amazonaws.com/Prod/get_data_one/';
+const API_URL_GETALLCARS = 'https://syr3x8vt0g.execute-api.us-east-1.amazonaws.com/Prod/get_data';
+const API_URL_CREATERATE = 'https://ut6t5bzpua.execute-api.us-east-1.amazonaws.com/Prod/insert_data';
+const API_URL_GETUSERINFO = 'https://ovxtk6zcwf.execute-api.us-east-1.amazonaws.com/Prod/get_user';
 
 const getCar = async (id) => {
     try {
