@@ -112,7 +112,7 @@
 <script>
 import Alerts from '../../../utils/Alert';
 import VehiclesServices from '../VehiclesServices';
-
+import Aws from '../../../utils/aws-configure'
 export default {
   props: {
     dialog: {
@@ -235,6 +235,7 @@ export default {
         this.loadImagePreviews();
       } else {
         this.resetForm();
+        this.step = 1;
       }
     }
   },
@@ -244,6 +245,7 @@ export default {
       this.resetForm();
       this.localDialog = false;
       if (!this.localDialog) {
+        this.step = 1;
         this.$emit('close-dialog-edit', false);
       }
     },
@@ -256,10 +258,12 @@ export default {
     loadImagePreviews() {
       this.vehicle.images.forEach((image, index) => {
         if (image) {
+          console.log(image);
           if (typeof image === 'string') {
             this.imagePreviews[index] = image;
           } else {
             this.imagePreviews[index] = URL.createObjectURL(image);
+            this.$refs.imageInput[index] = "jol" ;
           }
         }
       });
@@ -278,13 +282,38 @@ export default {
       const imageToCheck = this.vehicle.images[index];
       return this.vehicle.images.some((image, idx) => idx !== index && image && image.name === imageToCheck.name);
     },
+    async uploadImages() {
+    const uploadedUrls = [];
+    for (let i = 0; i < this.imageFiles.length; i++) {
+      const image = this.imageFiles[i];
+      if (image && !this.imageSizeError[i] && !this.duplicateImageError[i]) {
+        const params = {
+          Bucket: process.env.VUE_APP_S3_BUCKET_NAME,
+          Key: `vehicles/${Date.now()}_${image.name}`, 
+          Body: image,
+          ContentType: image.type 
+        };
+
+        try {
+          const data = await Aws.s3.upload(params).promise();
+          uploadedUrls.push(data.Location); 
+        } catch (err) {
+          console.log('Error al subir imagen', err);
+          throw new Error("No se pudieron cargar las imagenes");
+          
+        }
+      }
+    }
+    return uploadedUrls;
+  },
     async save() {
       try {
         if (!this.validForm) {
           return;
         }
-        Alerts.loading(true);
-
+        Alerts.loading(true); 
+        const uploadedUrls = await this.uploadImages();
+        this.vehicle.image_urls = uploadedUrls;
         const response = await VehiclesServices.updateCar(this.vehicle);
         console.log(response.data);
         this.$emit('car-updated', false);
