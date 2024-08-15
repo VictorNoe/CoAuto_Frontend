@@ -32,7 +32,16 @@ const updateUser = async (dataUser) => {
         return error;
     }
 };
-
+const deleteUser = async (data)=>{
+    try {
+        const response = await apiGateway.doDelete(API_URL_DELETEUSER, { id_user: data.id_user, id_status: data.id_status });
+        return response.data;
+    } catch (error) {
+        console.error('Error eliminando car', error);
+        return error;
+    }
+ }
+ 
 export default {
-    getAllUsers, addUser, updateUser
+    getAllUsers, addUser, updateUser,deleteUser
 }
