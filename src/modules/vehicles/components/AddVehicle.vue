@@ -330,6 +330,7 @@ export default {
           const data = await Aws.s3.upload(params).promise();
           uploadedUrls.push(data.Location); 
         } catch (err) {
+          console.error('Error al subir la imagen', err);
           throw new Error("No se pudieron cargar las imagenes");
           
         }
