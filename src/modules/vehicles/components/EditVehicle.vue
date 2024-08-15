@@ -268,16 +268,7 @@ export default {
         }
       });
     },
-    onImageChange(index) {
-      const imageFile = this.imageFiles[index];
-      if (imageFile && imageFile.size > 2 * 1024 * 1024) {
-        this.imageSizeError[index] = true;
-      } else {
-        this.imageSizeError[index] = false;
-        this.imagePreviews[index] = URL.createObjectURL(imageFile);
-        this.duplicateImageError[index] = this.checkDuplicateImages(index);
-      }
-    },
+
     checkDuplicateImages(index) {
       const imageToCheck = this.vehicle.images[index];
       return this.vehicle.images.some((image, idx) => idx !== index && image && image.name === imageToCheck.name);
@@ -312,9 +303,24 @@ export default {
           return;
         }
         Alerts.loading(true); 
-        const uploadedUrls = await this.uploadImages();
-        this.vehicle.image_urls = uploadedUrls;
-        const response = await VehiclesServices.updateCar(this.vehicle);
+        //const uploadedUrls = await this.uploadImages();
+        //this.vehicle.image_urls = uploadedUrls;
+        const dataCar = {
+        model: this.vehicle.model,
+        brand: this.vehicle.brand,
+        year: this.vehicle.year,
+        price: this.vehicle.price,
+        type: this.vehicle.type,
+        fuel: this.vehicle.fuel,
+        doors: this.vehicle.doors,
+        engine: this.vehicle.engine,
+        height: this.vehicle.height,
+        width: this.vehicle.width,
+        length: this.vehicle.length,
+        description: this.vehicle.description,
+        image_urls: this.vehicle.images
+      };       
+       const response = await VehiclesServices.updateCar(dataCar);
         console.log(response.data);
         this.$emit('car-updated', false);
         this.close();
