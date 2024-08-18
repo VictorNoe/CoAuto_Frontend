@@ -158,21 +158,23 @@ export default {
     modelRules() {
       return [
         value => !!value || 'El modelo es requerido',
-        value => /^[a-zA-Z0-9\s]+$/.test(value) || 'El modelo no debe contener caracteres especiales'
+        value => /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ.,]+$/.test(value) || 'El modelo no debe contener caracteres especiales'
       ];
     },
     brandRules() {
       return [
         value => !!value || 'La marca es requerida',
-        value => /^[a-zA-Z0-9\s]+$/.test(value) || 'La marca no debe contener caracteres especiales'
+        value => /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ]+$/.test(value) || 'La marca no debe contener caracteres especiales'
       ];
     },
     yearRules() {
-      return [
-        value => !!value || 'El año es requerido',
-        value => /^\d{4}$/.test(value) || 'El año debe ser un número de 4 dígitos'
-      ];
-    },
+  return [
+    value => !!value || 'El año es requerido',
+    value => /^\d{4}$/.test(value) || 'El año debe ser un número de 4 dígitos',
+    value => value >= 1980 || 'El año no debe ser menor a 1980',
+    value => value <= new Date().getFullYear() || 'El año no debe ser mayor al año actual'
+  ];
+},
     priceRules() {
       return [
         value => !!value || 'El precio es requerido',
@@ -182,13 +184,13 @@ export default {
     typeRules() {
       return [
         value => !!value || 'El tipo es requerido',
-        value => /^[a-zA-Z0-9\s]+$/.test(value) || 'El tipo no debe contener caracteres especiales'
+        value => /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ.,]+$/.test(value) || 'El tipo no debe contener caracteres especiales'
       ];
     },
     fuelRules() {
       return [
         value => !!value || 'El combustible es requerido',
-        value => /^[a-zA-Z0-9\s]+$/.test(value) || 'El combustible no debe contener caracteres especiales'
+        value => /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ.,]+$/.test(value) || 'El combustible no debe contener caracteres especiales'
       ];
     },
     doorsRules() {
@@ -200,31 +202,34 @@ export default {
     engineRules() {
       return [
         value => !!value || 'El motor es requerido',
-        value => /^[a-zA-Z0-9\s]+$/.test(value) || 'El motor no debe contener caracteres especiales'
+        value => /^[a-zA-Z0-9\s.,]+$/.test(value) || 'El motor no debe contener caracteres especiales'
       ];
     },
     heightRules() {
       return [
         value => !!value || 'La altura es requerida',
-        value => /^\d+(\.\d{1,2})?$/.test(value) || 'La altura debe ser un número válido'
+        value => /^\d+(\.\d{1,2})?$/.test(value) || 'La altura debe ser un número válido',
+        value => value.length <= 4 || 'La altura no debe exceder 4 dígitos'
       ];
     },
     widthRules() {
       return [
         value => !!value || 'El ancho es requerido',
-        value => /^\d+(\.\d{1,2})?$/.test(value) || 'El ancho debe ser un número válido'
+        value => /^\d+(\.\d{1,2})?$/.test(value) || 'El ancho debe ser un número válido',
+        value => value.length <= 4 || 'El ancho no debe exceder 4 dígitos'
       ];
     },
     lengthRules() {
       return [
         value => !!value || 'La longitud es requerida',
-        value => /^\d+(\.\d{1,2})?$/.test(value) || 'La longitud debe ser un número válido'
+        value => /^\d+(\.\d{1,2})?$/.test(value) || 'La longitud debe ser un número válido',
+        value => value.length <= 4 || 'La longitud no debe exceder 4 dígitos'
       ];
     },
     descriptionRules() {
       return [
         value => !!value || 'La descripción es requerida',
-        value => /^[a-zA-Z0-9\s]+$/.test(value) || 'La descripción no debe contener caracteres especiales'
+        value => /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ.,]+$/.test(value)  || 'La descripción no debe contener caracteres especiales'
       ];
     }
   },
@@ -274,6 +279,7 @@ export default {
     },
     resetForm() {
       this.vehicle = { ...this.vehicleData };
+      this.imageFiles = new Array(6).fill(null);
       this.imagePreviews = new Array(6).fill(null);
       this.imageSizeError = new Array(6).fill(false);
       this.duplicateImageError = new Array(6).fill(false);
