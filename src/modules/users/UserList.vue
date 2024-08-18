@@ -80,12 +80,6 @@
                                                                 dark>mdi-toggle-switch-off-outline</v-icon>Desactivar</v-btn>
                                                     </v-list-item-action>
                                                 </v-list-item>
-                                                <v-list-item>
-                                                    <v-list-item-action>
-                                                        <v-btn text x-small><v-icon left
-                                                                dark>mdi-message-outline</v-icon>Comentarios</v-btn>
-                                                    </v-list-item-action>
-                                                </v-list-item>
                                             </v-list>
                                         </v-card>
                                     </v-menu>
