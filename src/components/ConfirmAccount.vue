@@ -111,7 +111,6 @@ export default {
             try {
                 this.validating = true;
                 const result = await confirmAccount(this.confirmEmail, this.otp);
-                console.log(result);
                 if ( result?.statusCode === 200 ) {
                     Alert.Toast('success', 'Se a validado tu correo correctamente')
                     const data = await login(this.confirmEmail, this.ConfirmPassword);
@@ -135,7 +134,7 @@ export default {
                 }
                 this.validating = false;
                 this.text = result.response.data.message;
-                this.snackbarColor = 'warning',
+                this.snackbarColor = 'warning';
                 this.snackbar = true;
             } catch (err) {
                 console.log(err);

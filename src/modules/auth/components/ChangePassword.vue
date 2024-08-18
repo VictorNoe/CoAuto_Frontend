@@ -141,7 +141,6 @@ export default {
         },
         onClick() {
             this.e1 = 2
-            console.log(this.localEmail);
         },
         async verifycateOTP() {
             try {

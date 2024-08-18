@@ -14,7 +14,6 @@ const addCar = async (dataCar) => {
 };
 
 const updateCar = async (dataCar) => {
-    console.log(dataCar);
     try {
         const response = await apiGateway.doPut(API_URL_UPDATECAR, dataCar);
         return response.data;

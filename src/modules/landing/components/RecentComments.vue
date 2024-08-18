@@ -39,7 +39,6 @@ export default {
       try {
         const {statusCode, data} = await getAllRate();
         if (statusCode === 200) {
-          console.log(data);
           this.comments = data.slice(0,3);
         }
       } catch (error) {

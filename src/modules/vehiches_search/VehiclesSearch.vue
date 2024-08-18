@@ -81,7 +81,7 @@
         try {
           const { statusCode, data } = await VehicleServices.getAllCars();
           if (statusCode === 200) {
-            this.vehicles = data;
+            this.vehicles = data.filter(vehicle => vehicle.status === 1);
             this.applyFilters();
           }
         } catch (error) {
