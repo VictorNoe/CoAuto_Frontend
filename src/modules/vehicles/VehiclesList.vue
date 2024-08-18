@@ -58,7 +58,7 @@
                         </v-list-item>
                         <v-list-item>
                           <v-list-item-action>
-                            <v-btn text x-small @click="deleteVehicle(item)"><v-icon left dark>mdi-toggle-switch-off-outline</v-icon>Desactivar</v-btn>
+                            <v-btn text x-small @click="deleteVehicle(item)"><v-icon left dark>mdi-toggle-switch-off-outline</v-icon>{{ getStatusAction(item.status) }}</v-btn>
                           </v-list-item-action>
                         </v-list-item>
                         <v-list-item>
@@ -195,6 +195,9 @@ export default {
     },
     getStatusText(status) {
       return status === 1 ? 'Activo' : 'Inactivo';
+    },
+    getStatusAction(status){
+      return status === 1 ? 'Desactivar' : 'Activar';
     },
     openEditDialog(vehicle) {
       this.selectedVehicle = { ...vehicle };
