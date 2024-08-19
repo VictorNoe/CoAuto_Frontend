@@ -169,7 +169,6 @@ export default {
       try {
         this.loading = true;
         const result = await Register(this.user)
-        console.log(result);
         if( result.statusCode === 200 ) {
           Alert.Toast('success', result.message)
           this.dialog = true

@@ -4,7 +4,7 @@
             <v-col>
                 <div
                     class="text-h4 font-weight-bold"
-                    v-text="'Autos'"
+                    v-text="'Auto'"
                 ></div>
             </v-col>
         </v-row>

@@ -111,7 +111,6 @@ export default {
                 this.loading = true
                 this.validating = true
                 const result = await changePasword(this.oldPassword, this.newPassword);
-                console.log(result);
                 if (result?.data.statusCode === 200) {
                     Alert.Toast('success', 'Se actualizo la contraseña')
                     this.closeDialogBottom();

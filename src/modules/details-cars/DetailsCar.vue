@@ -144,29 +144,32 @@
                 </v-list-item>
                 <v-list-item v-for="(comment, i) in paginatedItems" :key="i">
                     <v-card class="w-100 my-4 pa-4">
-                        <v-row>
-                            <v-col cols="1">
-                                <v-avatar>
-                                    <img src="https://www.hotelbooqi.com/wp-content/uploads/2021/12/128-1280406_view-user-icon-png-user-circle-icon-png.png" alt="alt">
+                        <v-row align="center">
+                            <v-col cols="1" class="pa-8 d-flex justify-center">
+                                <v-avatar size="40">
+                                    <img
+                                        src="https://www.hotelbooqi.com/wp-content/uploads/2021/12/128-1280406_view-user-icon-png-user-circle-icon-png.png"
+                                        alt="User avatar"
+                                    />
                                 </v-avatar>
                             </v-col>
-                            <v-col cols="11">
-                                <div>
-                                    <v-card-title class="pa-0">
-                                        {{ comment.name }} {{ comment.lastname }}
-                                    </v-card-title>
-                                    <v-rating
-                                        empty-icon="$ratingFull"
-                                        color="yellow darken-3"
-                                        background-color="grey darken-1"
-                                        size="21"
-                                        :value="comment.value"
-                                        readonly
-                                    ></v-rating>
-                                </div>
+                            <v-col cols="10">
+                                <v-card-title class="pa-0">
+                                    {{ comment.name }} {{ comment.lastname }}
+                                </v-card-title>
+                                <v-rating
+                                    empty-icon="$ratingFull"
+                                    color="yellow darken-3"
+                                    background-color="grey darken-1"
+                                    size="21"
+                                    :value="comment.value"
+                                    readonly
+                                ></v-rating>
                             </v-col>
                         </v-row>
-                        {{ comment.comment }}
+                        <v-row class="pa-4">
+                            <div>{{ comment.comment }}</div>
+                        </v-row>
                     </v-card>
                 </v-list-item>
             </v-list>
@@ -233,11 +236,16 @@
                     >Comentar</v-btn>
                 </div>
             </v-card>
-            <h1 class="subheading">
+        <h1 class="subheading">
             Más vehículos
         </h1>
-        <div class="w-100 list-vehicles">
-            <v-card class="card-vehicle" v-for="(vehicle, index) in vehicles" :key="index" @click="redirectCar(vehicle.id_auto)" >
+        <div class="w-100 list-vehicles d-flex overflow-auto">
+            <v-card 
+                class="card-vehicle" 
+                v-for="(vehicle, index) in vehicles" 
+                :key="index" 
+                @click="redirectCar(vehicle.id_auto)" 
+            >
                 <v-img :src="vehicle.images[0]" height="150px" contain></v-img>
                 <v-card-title>{{ vehicle.model }}</v-card-title>
                 <v-card-subtitle>{{ vehicle.brand }}</v-card-subtitle>
@@ -247,8 +255,10 @@
                 </v-card-text>
             </v-card>
         </div>
+
+
         </template>
-</v-container>
+    </v-container>
 </template>
 
 <script>
@@ -335,6 +345,18 @@ export default {
                 const id = this.$route.params.id;
                 const response = await service.getCar(id);
                 this.exampleVehicle = response.data[0];
+                if (this.exampleVehicle.status !== 1) {
+                    this.$router.push('/vehicles_search');
+                    return;
+                }
+                this.comments = this.exampleVehicle.reviews;
+                if (this.comments && this.comments.length > 0) {
+                    this.getMeanRate();
+                    this.getOwnComment();
+                }
+
+                const responseGetAll = await service.getAllCars();
+                this.vehicles = responseGetAll.data.filter(vehicle => vehicle.status === 1).filter(vehicle => vehicle.id_auto.toString() !== id).slice(0, 5); 
             } catch (error) {
                 console.error(error);
             } finally {
@@ -357,21 +379,8 @@ export default {
                 this.commentsLoading = false;
             }
         },
-        async getAllCars() {
-            this.allCarsLoading = true;
-            try {
-                const id = this.$route.params.id;
-                const response = await service.getAllCars();
-                this.vehicles = response.data.filter(vehicle => vehicle.id_auto.toString() !== id);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                this.allCarsLoading = false;
-            }
-        },
         async rateCar() {
             try {
-                
                 if (this.validForm) {
                     this.commentLoading = true;
                     const payload = {
@@ -383,12 +392,14 @@ export default {
                 }
             } catch (error) {
                 throw new Error(error.message);
+            } finally {
+                this.commentLoading = false;
+                this.getComments();
             }
         },
         async getUser() {
             try {
                 this.user = await service.getUser();
-                console.log(this.user);
             } catch (error) {
                 console.error(error);
             }
@@ -430,8 +441,6 @@ export default {
     },
     mounted() {
         this.getCar();
-        this.getComments();
-        this.getAllCars();
         this.getUser();
     }
 };
@@ -535,8 +544,11 @@ export default {
 }
 
 .card-vehicle {
-    width: 30%;
     margin: 0 1em 0 1em;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+    width: 250px;
 }
 
 .default-comment-card {

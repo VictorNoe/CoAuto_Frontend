@@ -105,7 +105,7 @@ export default {
       try {
         const { statusCode, data } = await getAllCars();
         if (statusCode === 200) {
-          this.vehicles = data.slice(0, 6);
+          this.vehicles = data.filter(vehicle => vehicle.status === 1).slice(0, 6);
         }
       } catch (error) {
         console.error(error);
