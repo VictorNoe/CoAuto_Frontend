@@ -16,6 +16,7 @@
             style="cursor:pointer;"
             class="text-button font-weight-bold text-decoration-none text-decoration-underline"
             v-text="tab1()"
+            @click="scrollToTop"
           ></div>
         </router-link>
         <router-link class="ml-7" :to="{ name: this.tabLinkName2 }">
@@ -23,6 +24,7 @@
             style="cursor:pointer;"
             class="text-button font-weight-bold text-decoration-none text-decoration-underline"
             v-text="tab2()"
+            @click="scrollToTop"
           ></div>
         </router-link>
         <v-spacer></v-spacer>
@@ -161,6 +163,13 @@ export default {
         this.tabLinkName2 = 'vehicles_search';
         return "Explorar";
       }
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     }
   },
 }

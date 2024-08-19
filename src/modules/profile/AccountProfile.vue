@@ -57,7 +57,7 @@
               ></div>
               <div
                 class="text-subtitle-1 text--secondary"
-                v-text="'Este es tu correo electronico y contraseña que registraste, si deseas cambiar la contraseña da click en editar'"
+                v-text="`Este es tu correo electronico y contraseña que registraste${!stateRole ? ', si deseas cambiar la contraseña da click en editar' : '.'}`"
               ></div>
             </v-col>
             <v-col cols="12" xl="5" lg="5" md="6" sm="6" xs="12">
@@ -67,7 +67,7 @@
               <v-text-field label="Contraseña" v-model="password" type="password" readonly dense outlined disabled :loading="state"
                 required></v-text-field>
             </v-col>
-            <v-col cols="12" v-if="state || stateRole || loadingBtn">
+            <v-col cols="12" v-if="!stateRole">
               <div
                 style="cursor:pointer;"
                 class="text-subtitle-1 font-weight-bold text-decoration-none text-decoration-underline"
@@ -183,7 +183,9 @@ export default {
       }
     },
     openChangePassword() {
-      this.dialog = true;
+      if (!this.state) {
+        this.dialog = true;
+      }
     },
     closeChangePassword(value) {
       this.dialog = value;
