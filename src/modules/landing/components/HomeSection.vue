@@ -1,5 +1,5 @@
 <template>
-    <v-container class="my-12 d-flex align-center justify-center">
+    <v-container class="d-flex align-center justify-center">
         <v-row class="d-flex justify-center">
             <v-col cols="12" md="6" >
                 <h1 class="my-8">Empezar el día nunca se ha sentido mejor.</h1>
@@ -8,7 +8,7 @@
                     <v-btn color="primary" dark @click="car()">Descubre ahora</v-btn>
                 </div>
             </v-col>
-            <v-col cols="12" md="6" >
+            <v-col class="justify-end" cols="12" md="6" >
                 <v-img 
                     src="../../../assets/svg/undraw_file_searching_re_3evy.svg" 
                     alt="Home Image"

@@ -67,7 +67,7 @@
               <v-text-field label="Contraseña" v-model="password" type="password" readonly dense outlined disabled :loading="state"
                 required></v-text-field>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="12" v-if="state || stateRole || loadingBtn">
               <div
                 style="cursor:pointer;"
                 class="text-subtitle-1 font-weight-bold text-decoration-none text-decoration-underline"
@@ -188,6 +188,9 @@ export default {
     closeChangePassword(value) {
       this.dialog = value;
     },
+    noPassword() {
+      Alert.Toast("error", "No se puede puto")
+    }
   }
 };
 </script>

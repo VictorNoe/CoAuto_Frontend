@@ -11,8 +11,20 @@
             max-width="80"
           ></v-img>
         </v-toolbar-title>
-        <router-link class="color-link ml-14" :to="{ name: this.tabLinkName1 }">{{tab1()}}</router-link>
-        <router-link class="color-link ml-7" :to="{ name: this.tabLinkName2 }">{{tab2()}}</router-link>
+        <router-link class="ml-7" :to="{ name: this.tabLinkName1 }">
+          <div
+            style="cursor:pointer;"
+            class="text-button font-weight-bold text-decoration-none text-decoration-underline"
+            v-text="tab1()"
+          ></div>
+        </router-link>
+        <router-link class="ml-7" :to="{ name: this.tabLinkName2 }">
+          <div
+            style="cursor:pointer;"
+            class="text-button font-weight-bold text-decoration-none text-decoration-underline"
+            v-text="tab2()"
+          ></div>
+        </router-link>
         <v-spacer></v-spacer>
         <v-avatar color="#2570EB">
           <img v-if="user?.image !== null && user?.image !== ''"
@@ -34,6 +46,7 @@
             title="Title"
             icon
             @click="show = !show"
+            :disabled="loading"
             v-bind="attrs"
             v-on="on"
           >
@@ -91,6 +104,7 @@ export default {
     return {
       showNav: false,
       show: true,
+      loading: true,
       tabLinkName1: null,
       tabLinkName2: null,
       user: {
@@ -118,6 +132,8 @@ export default {
         return true;                          
       } catch (error) {
           console.error('Error agregando car', error);
+      } finally {
+        this.loading = false;
       }
     },
     logout() {
