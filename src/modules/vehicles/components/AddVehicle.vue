@@ -24,8 +24,7 @@
                     <v-text-field v-model="vehicle.brand" label="Marca" required :rules="brandRules"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="vehicle.year" label="Año" type="number" required
-                      :rules="yearRules"></v-text-field>
+                    <v-text-field v-model="vehicle.year" label="Año" type="number" required :rules="yearRules"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -39,8 +38,8 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="vehicle.price" label="Precio" type="number" required
-                      :rules="priceRules"></v-text-field>
+                    <v-text-field v-model="vehicle.price" label="Precio" type="number" required :rules="priceRules"
+                ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="vehicle.type" label="Tipo" required :rules="typeRules"></v-text-field>
@@ -49,27 +48,22 @@
                     <v-text-field v-model="vehicle.fuel" label="Combustible" required :rules="fuelRules"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="vehicle.doors" label="Número de puertas" type="number" required
-                      :rules="doorsRules"></v-text-field>
+                    <v-text-field v-model="vehicle.doors" label="Número de puertas" type="number" required :rules="doorsRules"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="vehicle.engine" label="Motor" required :rules="engineRules"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="vehicle.height" label="Altura" type="number" required
-                      :rules="heightRules"></v-text-field>
+                    <v-text-field v-model="vehicle.height" label="Altura" type="number" required :rules="heightRules"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="vehicle.width" label="Ancho" type="number" required
-                      :rules="widthRules"></v-text-field>
+                    <v-text-field v-model="vehicle.width" label="Ancho" type="number" required :rules="widthRules"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="vehicle.length" label="Longitud" type="number" required
-                      :rules="lengthRules"></v-text-field>
+                    <v-text-field v-model="vehicle.length" label="Longitud" type="number" required :rules="lengthRules"></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-textarea v-model="vehicle.description" label="Descripción" required
-                      :rules="descriptionRules"></v-textarea>
+                    <v-textarea v-model="vehicle.description" label="Descripción" required :rules="descriptionRules"></v-textarea>
                   </v-col>
                 </v-row>
               </v-container>
@@ -83,18 +77,20 @@
             <v-stepper-content step="3">
               <v-container>
                 <v-row>
-                  <v-col v-for="(image, index) in images" :key="index" cols="12">
+                  <v-col cols="12">
                     <v-card>
-                      <v-img v-if="imagePreviews[index]" :src="imagePreviews[index]" height="150" contain
-                        class="mb-3"></v-img>
-                      <input type="file" @change="handleFileUpload($event, index)" accept="image/*"
-                        style="display: none" ref="imageInput">
-                      <v-btn color="blue" dark @click="$refs.imageInput[index].click()"
-                        v-if="!imagePreviews[index]">Subir Imagen</v-btn>
-                      <v-alert v-if="imageSizeError[index]" type="error">La imagen no debe pesar mas de 5MB</v-alert>
-                      <v-alert v-if="duplicateImageError[index]" type="error">Esta imagen ya ha sido seleccionada,
-                        selecciona otra</v-alert>
+                      <v-img v-if="imagePreviews.length" :src="imagePreviews[0]" height="150" contain class="mb-3"></v-img>
+                      <input type="file" @change="handleFileUpload($event)" accept="image/*" style="display: none" ref="imageInput" multiple>
+                      <v-btn color="blue" dark @click="$refs.imageInput.click()">Subir Imágenes</v-btn>
+                      <v-alert v-if="imageSizeError" type="error">Una o más imágenes no deben pesar más de 5MB</v-alert>
+                      <v-alert v-if="duplicateImageError" type="error">Una o más imágenes ya han sido seleccionadas, selecciona otras</v-alert>
+                      <v-alert v-if="imageCountError" type="error">Solo se permiten hasta 6 imágenes</v-alert>
                     </v-card>
+                    <v-row v-if="imagePreviews.length" class="mt-3">
+                      <v-col v-for="(image, index) in imagePreviews" :key="index" cols="6" sm="4" md="3">
+                        <v-img :src="image" height="100" contain></v-img>
+                      </v-col>
+                    </v-row>
                   </v-col>
                 </v-row>
               </v-container>
@@ -146,8 +142,11 @@ export default {
       },
       images: new Array(6).fill(null),
       imagePreviews: [],
-      imageSizeError: new Array(6).fill(false),
-      duplicateImageError: new Array(6).fill(false)
+      imageSizeError: false,
+      duplicateImageError: false,
+      imageCountError: false,
+      formattedPrice:''
+
     };
   },
   computed: {
@@ -164,9 +163,12 @@ export default {
         this.vehicle.height &&
         this.vehicle.width &&
         this.vehicle.length &&
-        this.vehicle.description && this.imagePreviews.some(preview => preview) &&
-        !this.imageSizeError.includes(true) &&
-        !this.duplicateImageError.includes(true)
+        this.vehicle.description && 
+        this.imagePreviews.length &&
+        !this.imageSizeError &&
+        !this.duplicateImageError &&
+        !this.imageCountError
+
       );
     },
     modelRules() {
@@ -192,7 +194,8 @@ export default {
     priceRules() {
       return [
         value => !!value || 'El precio es requerido',
-        value => /^\d+(\.\d{1,2})?$/.test(value) || 'El precio debe ser un número válido'
+        value => /^\d+(\.\d{1,2})?$/.test(value.replace(/,/g, '')) || 'El precio debe ser un número válido',
+        value => parseFloat(value.replace(/,/g, '')) <= 3000000 || 'El precio no debe ser mayor a 3 millones'
       ];
     },
     typeRules() {
@@ -210,7 +213,8 @@ export default {
     doorsRules() {
       return [
         value => !!value || 'El número de puertas es requerido',
-        value => /^\d+$/.test(value) || 'El número de puertas debe ser un número'
+        value => /^\d+$/.test(value) || 'El número de puertas debe ser un número',
+        value => value >= 2 && value <=5 || 'El número de puertas debe ser un numero entre 2 a 5'
       ];
     },
     engineRules() {
@@ -223,27 +227,28 @@ export default {
       return [
         value => !!value || 'La altura es requerida',
         value => /^\d+(\.\d{1,2})?$/.test(value) || 'La altura debe ser un número válido',
-        value => value.length <= 4 || 'La altura no debe exceder 4 dígitos'
+        value => value.length <= 2 || 'La altura no debe exceder 2 dígitos'
       ];
     },
     widthRules() {
       return [
         value => !!value || 'El ancho es requerido',
         value => /^\d+(\.\d{1,2})?$/.test(value) || 'El ancho debe ser un número válido',
-        value => value.length <= 4 || 'El ancho no debe exceder 4 dígitos'
+        value => value.length <= 2 || 'El ancho no debe exceder 2 dígitos'
       ];
     },
     lengthRules() {
       return [
         value => !!value || 'La longitud es requerida',
         value => /^\d+(\.\d{1,2})?$/.test(value) || 'La longitud debe ser un número válido',
-        value => value.length <= 4 || 'La longitud no debe exceder 4 dígitos'
+        value => value.length <= 2 || 'La longitud no debe exceder 2 dígitos'
       ];
     },
     descriptionRules() {
       return [
         value => !!value || 'La descripción es requerida',
-        value => /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ.,]+$/.test(value) || 'La descripción no debe contener caracteres especiales'
+        value => /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ.,]+$/.test(value) || 'La descripción no debe contener caracteres especiales',
+        value => value.length <= 100 || 'La descripción no debe exceder 100 caracteres'
       ];
     }
   },
@@ -253,9 +258,17 @@ export default {
       if (!val) {
         this.resetForm();
       }
-    }
+    },
+    
   },
   methods: {
+    formatPrice() {
+      const plainNumber = this.formattedPrice.replace(/,/g, '');
+      this.formattedPrice = parseFloat(plainNumber).toLocaleString('en');
+      this.vehicle.price = parseFloat(plainNumber);
+      console.log(this.formattedPrice);
+      
+    },
     close() {
       this.resetForm();
       this.localDialog = false;
@@ -279,37 +292,57 @@ export default {
         description: '',
         image_urls: []
       };
-      this.images = new Array(6).fill(null);
+      this.images = [];
       this.imagePreviews = [];
-      this.imageSizeError = new Array(6).fill(false);
-      this.duplicateImageError = new Array(6).fill(false);
+      this.imageSizeError = false;
+      this.duplicateImageError = false;
+      this.imageCountError = false;
+      this.formattedPrice='';
     },
-    handleFileUpload(event, index) {
-      const file = event.target.files[0];
-      if (file && index >= 0 && index < 6) {
-        if (file.size > 5242880) {
-          this.$set(this.imageSizeError, index, true);
-          this.$refs.imageInput[index].value = '';
-          return;
-        } else {
-          this.$set(this.imageSizeError, index, false);
+    handleFileUpload(event) {
+      const files = event.target.files;
+      const maxFileSize = 5 * 1024 * 1024; // 5MB
+      const maxImages = 6;
+      let newImages = [];
+      let newImagePreviews = [];
+      let hasDuplicate = false;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        if (file.size > maxFileSize) {
+          this.imageSizeError = true;
+          continue;
         }
-        const selectedImages = this.images.filter((img, idx) => idx !== index && img);
-        if (selectedImages.some(img => img.name === file.name)) {
-          this.$set(this.duplicateImageError, index, true);
-          this.$refs.imageInput[index].value = '';
-          return;
-        } else {
-          this.$set(this.duplicateImageError, index, false);
-        }
-        this.$set(this.images, index, file);
+
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.$set(this.imagePreviews, index, e.target.result);
+          const src = e.target.result;
+
+          if (this.imagePreviews.includes(src)) {
+            hasDuplicate = true;
+            return;
+          }
+
+          newImages.push(file);
+          newImagePreviews.push(src);
+
+          if (newImagePreviews.length > maxImages) {
+            this.imageCountError = true;
+            return;
+          }
+
+          this.imageSizeError = false;
+          this.duplicateImageError = hasDuplicate;
+          this.imageCountError = false;
+
+          this.images = [...this.images, ...newImages];
+          this.imagePreviews = [...this.imagePreviews, ...newImagePreviews];
         };
         reader.readAsDataURL(file);
       }
     },
+
     async save() {
       try {
         if (!this.validForm) {
