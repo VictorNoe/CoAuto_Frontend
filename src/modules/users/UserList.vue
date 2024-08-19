@@ -57,7 +57,7 @@
                                 </td>
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.email }}</td>
-                                <td><v-chip outlined>{{ getRolText(item.id_role) }}</v-chip></td>
+                                <td><v-chip outlined>{{ getRolText(item.role) }}</v-chip></td>
                                 <td><v-chip :color="getColor(item.status)" dark>{{ getStatusText(item.status)
                                         }}</v-chip></td>
                                 <td>
@@ -77,7 +77,7 @@
                                                 <v-list-item>
                                                     <v-list-item-action>
                                                         <v-btn text x-small @click="desActivateUser(item)"><v-icon left
-                                                                dark>mdi-toggle-switch-off-outline</v-icon>Desactivar</v-btn>
+                                                                dark>mdi-toggle-switch-off-outline</v-icon>{{getStatusAction(item.status)}}</v-btn>
                                                     </v-list-item-action>
                                                 </v-list-item>
                                             </v-list>
@@ -90,7 +90,10 @@
                 </v-simple-table>
             </v-col>
         </v-row>
-        <EditUser :dialog.sync="editDialog" :userData="selectedUser" @update:dialog="editDialog = $event"
+        <EditUser :dialog.sync="editDialog"
+         :userData="selectedUser" 
+        @close-dialog-edit="handleDialogCloseEdit"
+        @update:dialog="editDialog=event"
             @user-updated="handleUserUpdated" />
     </v-container>
 </template>
@@ -132,12 +135,15 @@ export default {
             await this.getUsers(); // Refresca la lista de usuarios después de actualizar uno
             this.editDialog = value;
         },
+        handleDialogCloseEdit(value) {
+        this.editDialog = value;
+        },
         async getUsers() {
             this.loading = true;
             try {
                 const { statusCode, data } = await UserServices.getAllUsers();
                 if (statusCode === 200) {
-                    this.users = data; // Asigna los usuarios obtenidos a la lista
+                    this.users = data.filter(u => u.role != "admin"); 
                     this.filterUsers(); // Filtra la lista de usuarios
                 }
             } catch (error) {
@@ -172,9 +178,12 @@ export default {
             // Retorna el texto del estado del usuario
             return status === 1 ? 'Activo' : 'Inactivo';
         },
+        getStatusAction(status) {
+            return status === 1 ? 'Desactivar' : 'Activar';    
+        },
         getRolText(rol) {
             // Retorna el texto del rol del usuario
-            return rol === 1 ? 'Administrador' : 'Cliente';
+            return rol === "client" ? 'Cliente' : 'Administrador';
         },
         openEditDialog(user) {
             this.selectedUser = { ...user }; // Copia el usuario seleccionado
