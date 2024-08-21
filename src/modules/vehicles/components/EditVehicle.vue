@@ -339,7 +339,6 @@ export default {
           return;
         }
         Alerts.loading(true);
-        const uploadedUrls = await this.uploadImages();
         const dataCar = {
           id_auto: this.vehicle.id_auto,
           model: this.vehicle.model,
@@ -354,7 +353,7 @@ export default {
           width: this.vehicle.width,
           length: this.vehicle.length,
           description: this.vehicle.description,
-          image_urls: uploadedUrls
+          image_urls: this.vehicle.images,
         };
         const response = await VehiclesServices.updateCar(dataCar);
         console.log(response.data);
