@@ -11,10 +11,6 @@
                         <v-col cols="12" sm="6" md="4">
                             <v-text-field v-model="user.name" label="Nombre" required :rules="nameRules"></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="user.email" label="Correo Electrónico" required
-                                :rules="emailRules"></v-text-field>
-                        </v-col>
                     </v-row>
                 </v-container>
 
@@ -59,13 +55,6 @@ export default {
             return [
                 value => !!value || 'El nombre es requerido',
                 value => /^[a-zA-Z\s]+$/.test(value) || 'El nombre no debe contener caracteres especiales'
-            ];
-        },
-        emailRules() {
-            // Reglas de validación para el correo electrónico
-            return [
-                value => !!value || 'El correo electrónico es requerida',
-                value => /.+@.+\..+/.test(value) || 'Debe ser un correo electrónico válido'
             ];
         },
     },
