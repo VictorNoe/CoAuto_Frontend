@@ -3,7 +3,7 @@
         <h1>Usuarios</h1>
         <v-row>
             <v-col cols="12" md="4" class="align-self-center">
-                <v-text-field v-model="searchtext" placeholder="Buscar Usuario" outlined
+                <v-text-field v-model="searchText" placeholder="Buscar Usuario" outlined
                     prepend-inner-icon="mdi-magnify" />
             </v-col>
             <v-col cols="12" md="2">
@@ -28,7 +28,10 @@
                                     <h3>Imagen</h3>
                                 </th>
                                 <th class="text-left">
-                                    <h3>Nombre Completo</h3>
+                                    <h3>Nombre</h3>
+                                </th>
+                                 <th class="text-left">
+                                    <h3>Apellidos</h3>
                                 </th>
                                 <th class="text-left">
                                     <h3>Correo Electrónico</h3>
@@ -56,6 +59,7 @@
                                     </v-avatar>
                                 </td>
                                 <td>{{ item.name }}</td>
+                                <td>{{ item.lastname }}</td>
                                 <td>{{ item.email }}</td>
                                 <td><v-chip outlined>{{ getRolText(item.role) }}</v-chip></td>
                                 <td><v-chip :color="getColor(item.status)" dark>{{ getStatusText(item.status)
@@ -109,7 +113,8 @@ export default {
     data() {
         return {
             filterOptions: [
-                'Nombre Completo',
+                'Nombre',
+                'Apellidos',
                 'Correo electrónico',
                 'Rol',
                 'Estado'
@@ -156,17 +161,20 @@ export default {
             this.filteredUsers = this.users.filter(user => {
                 const value = this.searchText.toLowerCase();
                 if (!value) return true;
+
                 switch (this.selectedFilter) {
-                    case 'Nombre Completo':
+                    case 'Nombre':
                         return user.name.toLowerCase().includes(value);
+                    case 'Apellidos':
+                        return user.lastname.toLowerCase().includes(value);
                     case 'Correo Electrónico':
                         return user.email.toLowerCase().includes(value);
                     case 'Rol':
-                        return this.getRolText(user.id_role).toLowerCase().includes(value);
+                        return this.getRolText(user.role).toLowerCase().includes(value);
                     case 'Estado':
                         return this.getStatusText(user.status).toLowerCase().includes(value);
                     default:
-                        return Object.values(user).some(val => val.toString().toLowerCase().includes(value));
+                        return user.id_user.toString().includes(value);
                 }
             })
         },
